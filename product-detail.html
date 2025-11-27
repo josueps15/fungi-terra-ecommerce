@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Producto - FUNGI TERRA</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* Product Detail Specific Styles */
+        .product-detail-container {
+            max-width: 1200px;
+            margin: 120px auto 60px;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .breadcrumb {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+            font-size: var(--font-size-sm);
+            color: var(--color-gray);
+        }
+
+        .breadcrumb a {
+            color: var(--color-primary);
+            transition: color var(--transition-base);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--color-primary-dark);
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-3xl);
+            margin-bottom: var(--spacing-3xl);
+        }
+
+        /* Gallery */
+        .product-gallery {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .main-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+        }
+
+        .thumbnail {
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all var(--transition-base);
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: var(--color-primary);
+            transform: scale(1.05);
+        }
+
+        /* Product Info */
+        .product-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        .product-category-badge {
+            display: inline-block;
+            background: var(--color-light-gray);
+            color: var(--color-primary);
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        .product-title {
+            font-size: var(--font-size-4xl);
+            color: var(--color-primary-dark);
+            margin: 0;
+        }
+
+        .product-price-section {
+            display: flex;
+            align-items: baseline;
+            gap: var(--spacing-md);
+            padding: var(--spacing-lg) 0;
+            border-top: 1px solid var(--color-light-gray);
+            border-bottom: 1px solid var(--color-light-gray);
+        }
+
+        .product-price-large {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .product-unit {
+            font-size: var(--font-size-lg);
+            color: var(--color-gray);
+        }
+
+        .product-description-full {
+            font-size: var(--font-size-lg);
+            line-height: 1.8;
+            color: var(--color-dark-gray);
+        }
+
+        .product-actions-detail {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-light-gray);
+            border-radius: var(--radius-md);
+        }
+
+        .quantity-btn-large {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--color-white);
+            border: 1px solid var(--color-medium-gray);
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .quantity-btn-large:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
+        .quantity-display {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .btn-add-cart-large {
+            flex: 1;
+            padding: var(--spacing-lg) var(--spacing-2xl);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+
+        /* Product Details Tabs */
+        .product-tabs {
+            margin-top: var(--spacing-3xl);
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            border-bottom: 2px solid var(--color-light-gray);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .tab-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: none;
+            border: none;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--color-gray);
+            cursor: pointer;
+            position: relative;
+            transition: color var(--transition-base);
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-lg);
+            background: var(--color-light-gray);
+            border-radius: var(--radius-lg);
+        }
+
+        .benefit-icon {
+            font-size: var(--font-size-3xl);
+        }
+
+        .benefit-text h4 {
+            margin: 0 0 var(--spacing-sm) 0;
+            color: var(--color-primary-dark);
+        }
+
+        .benefit-text p {
+            margin: 0;
+            color: var(--color-dark-gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-xl);
+            }
+
+            .product-gallery {
+                position: static;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-actions-detail {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="index.html" class="logo">FUNGI TERRA</a>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#inicio" class="nav-link">Inicio</a></li>
+                <li><a href="index.html#hongos-frescos" class="nav-link">Hongos Frescos</a></li>
+                <li><a href="index.html#extractos" class="nav-link">Extractos</a></li>
+                <li><a href="index.html#productos-especiales" class="nav-link">Productos Especiales</a></li>
+                <li><a href="index.html#combos" class="nav-link">Combos</a></li>
+                <li><a href="index.html#noticias" class="nav-link">Noticias</a></li>
+                <li><a href="index.html#contacto" class="nav-link">Contacto</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="cart-button" id="cartBtn">
+                    Carrito
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Product Detail -->
+    <div class="product-detail-container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="index.html">Inicio</a>
+            <span>/</span>
+            <a href="index.html#productos">Productos</a>
+            <span>/</span>
+            <span id="breadcrumbProduct">Cargando...</span>
+        </div>
+
+        <!-- Product Detail Grid -->
+        <div class="product-detail-grid">
+            <!-- Gallery -->
+            <div class="product-gallery">
+                <img id="mainImage" class="main-image" src="" alt="Producto">
+                <div class="thumbnail-grid" id="thumbnailGrid">
+                    <!-- Thumbnails will be loaded by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info-section">
+                <span class="product-category-badge" id="productCategory">Categoría</span>
+                <h1 class="product-title" id="productTitle">Nombre del Producto</h1>
+
+                <div class="product-price-section">
+                    <span class="product-price-large" id="productPrice">$0.00</span>
+                    <span class="product-unit" id="productUnit">por unidad</span>
+                </div>
+
+                <p class="product-description-full" id="productDescription">
+                    Descripción del producto...
+                </p>
+
+                <!-- Quantity and Add to Cart -->
+                <div class="product-actions-detail">
+                    <div class="quantity-selector">
+                        <button class="quantity-btn-large" onclick="changeQuantity(-1)">-</button>
+                        <span class="quantity-display" id="quantityDisplay">1</span>
+                        <button class="quantity-btn-large" onclick="changeQuantity(1)">+</button>
+                    </div>
+                    <button class="btn btn-primary btn-add-cart-large" onclick="addToCartFromDetail()">
+                        Agregar al Carrito
+                    </button>
+                    <button class="btn btn-whatsapp" onclick="buyWhatsAppFromDetail()">
+                        Comprar por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Tabs -->
+        <div class="product-tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('benefits')">Beneficios</button>
+                <button class="tab-btn" onclick="switchTab('usage')">Modo de Uso</button>
+                <button class="tab-btn" onclick="switchTab('storage')">Almacenamiento</button>
+            </div>
+
+            <div id="benefitsTab" class="tab-content active">
+                <h3>Beneficios Principales</h3>
+                <div class="benefits-grid" id="benefitsGrid">
+                    <!-- Benefits will be loaded by JavaScript -->
+                </div>
+            </div>
+
+            <div id="usageTab" class="tab-content">
+                <h3>Modo de Uso</h3>
+                <div id="usageContent">
+                    <!-- Usage info will be loaded by JavaScript -->
+                </div>
+            </div>
+
+            <div id="storageTab" class="tab-content">
+                <h3>Almacenamiento</h3>
+                <div id="storageContent">
+                    <!-- Storage info will be loaded by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h3>Tu Carrito</h3>
+            <button class="cart-close" id="closeCart">&times;</button>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty" id="cartEmpty">
+                <p>Tu carrito está vacío</p>
+            </div>
+        </div>
+
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="btn btn-whatsapp cart-checkout" id="checkoutWhatsApp">
+                Comprar por WhatsApp
+            </button>
+            <button class="btn btn-instagram cart-checkout" id="checkoutInstagram"
+                style="margin-top: var(--spacing-sm);">
+                Comprar por Instagram
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    <script src="product-detail.js"></script>
+</body>
+
+</html>

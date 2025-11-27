@@ -1,0 +1,208 @@
+// Product Detail Page JavaScript
+
+let currentQuantity = 1;
+let currentProduct = null;
+
+// Get product ID from URL
+function getProductIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id');
+}
+
+// Load product details
+function loadProductDetail() {
+  const productId = getProductIdFromURL();
+
+  if (!productId) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  currentProduct = findProduct(productId);
+
+  if (!currentProduct) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Update page title
+  document.title = `${currentProduct.name} - SETAS`;
+
+  // Update breadcrumb
+  document.getElementById('breadcrumbProduct').textContent = currentProduct.name;
+
+  // Update product info
+  document.getElementById('productCategory').textContent = currentProduct.category;
+  document.getElementById('productTitle').textContent = currentProduct.name;
+  document.getElementById('productPrice').textContent = `$${currentProduct.price.toFixed(2)}`;
+  document.getElementById('productUnit').textContent = currentProduct.unit;
+  document.getElementById('productDescription').textContent = currentProduct.description;
+
+  // Load gallery
+  loadGallery();
+
+  // Load benefits
+  loadBenefits();
+
+  // Load usage info
+  loadUsageInfo();
+
+  // Load storage info
+  loadStorageInfo();
+}
+
+// Load gallery images
+function loadGallery() {
+  const mainImage = document.getElementById('mainImage');
+  const thumbnailGrid = document.getElementById('thumbnailGrid');
+
+  // For now, use the same image multiple times (you can add more images later)
+  const images = [
+    currentProduct.image,
+    currentProduct.image,
+    currentProduct.image,
+    currentProduct.image
+  ];
+
+  mainImage.src = images[0];
+  mainImage.alt = currentProduct.name;
+
+  thumbnailGrid.innerHTML = images.map((img, index) => `
+    <img 
+      src="${img}" 
+      alt="${currentProduct.name} ${index + 1}" 
+      class="thumbnail ${index === 0 ? 'active' : ''}"
+      onclick="changeMainImage('${img}', ${index})"
+      onerror="this.src='https://via.placeholder.com/400x400/2d5016/ffffff?text=${encodeURIComponent(currentProduct.name)}'"
+    >
+  `).join('');
+}
+
+// Change main image
+function changeMainImage(imageSrc, index) {
+  document.getElementById('mainImage').src = imageSrc;
+
+  // Update active thumbnail
+  document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+    </div >
+      `).join('');
+}
+
+// Load usage information
+function loadUsageInfo() {
+    const usageContent = document.getElementById('usageContent');
+
+    let usageText = '';
+
+    if (currentProduct.id.includes('oyster')) {
+        usageText = `
+      < p > <strong>Preparación:</strong></p >
+      <ul>
+        <li>Limpiar suavemente con un paño húmedo o cepillo suave</li>
+        <li>No lavar directamente bajo el agua para mantener la textura</li>
+        <li>Cortar en trozos del tamaño deseado</li>
+      </ul>
+      
+      <p><strong>Cocción:</strong></p>
+      <ul>
+        <li><strong>Salteado:</strong> 5-7 minutos a fuego medio-alto con aceite de oliva</li>
+        <li><strong>Asado:</strong> 15-20 minutos a 200°C</li>
+        <li><strong>En sopas:</strong> Agregar en los últimos 10 minutos de cocción</li>
+      </ul>
+      
+      <p><strong>Consejos:</strong></p>
+      <ul>
+        <li>No sobrecocinar para mantener la textura</li>
+        <li>Combina bien con ajo, hierbas frescas y mantequilla</li>
+        <li>Ideal para pastas, risottos, y platos asiáticos</li>
+      </ul>
+    `;
+    }
+
+    usageContent.innerHTML = usageText;
+}
+
+// Load storage information
+function loadStorageInfo() {
+    const storageContent = document.getElementById('storageContent');
+
+    let storageText = '';
+
+    if (currentProduct.id.includes('oyster')) {
+        storageText = `
+      < p > <strong>Refrigeración:</strong></p >
+      <ul>
+        <li>Guardar en el refrigerador a 2-4°C</li>
+        <li>Mantener en bolsa de papel o recipiente con ventilación</li>
+        <li>No guardar en bolsas plásticas selladas</li>
+        <li>Consumir dentro de 5-7 días para mejor frescura</li>
+      </ul>
+      
+      <p><strong>Congelación:</strong></p>
+      <ul>
+        <li>Cocinar ligeramente antes de congelar</li>
+        <li>Guardar en recipientes herméticos</li>
+        <li>Puede durar hasta 3 meses congelado</li>
+        <li>Descongelar en refrigerador antes de usar</li>
+      </ul>
+      
+      <p><strong>Señales de Frescura:</strong></p>
+      <ul>
+        <li>✓ Color uniforme y brillante</li>
+        <li>✓ Textura firme al tacto</li>
+        <li>✓ Aroma fresco y terroso</li>
+        <li>✗ Evitar si hay manchas oscuras o textura viscosa</li>
+      </ul>
+    `;
+    }
+
+    storageContent.innerHTML = storageText;
+}
+
+// Switch tabs
+function switchTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    // Update tab content
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(`${ tabName } Tab`).classList.add('active');
+}
+
+// Change quantity
+function changeQuantity(change) {
+    currentQuantity = Math.max(1, currentQuantity + change);
+    document.getElementById('quantityDisplay').textContent = currentQuantity;
+}
+
+// Add to cart from detail page
+function addToCartFromDetail() {
+    if (!currentProduct) return;
+
+    for (let i = 0; i < currentQuantity; i++) {
+        addToCart(currentProduct.id);
+    }
+
+    showNotification(`${ currentQuantity } x ${ currentProduct.name } agregado al carrito`);
+    currentQuantity = 1;
+    document.getElementById('quantityDisplay').textContent = '1';
+}
+
+// Buy via WhatsApp from detail page
+function buyWhatsAppFromDetail() {
+    if (!currentProduct) return;
+
+    const message = `Hola, quiero comprar: \\n\\n * ${ currentProduct.name }*\\nCantidad: ${ currentQuantity } \\nPrecio: $${ (currentProduct.price * currentQuantity).toFixed(2) } \\n\\n¿Está disponible ? `;
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadProductDetail();
+  });

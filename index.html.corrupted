@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="SETAS - Venta de hongos frescos, extractos medicinales y productos naturales. Hongos ostra, melena de león, cordyceps y más.">
+  <meta name="keywords"
+    content="hongos frescos, hongos medicinales, extractos, melena de león, cordyceps, cola de pavo, microdosis">
+  <title>SETAS - Hongos Frescos y Medicinales | Productos Naturales</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="#" class="logo">SETAS</a>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#inicio" class="nav-link">Inicio</a></li>
+        <li><a href="#hongos-frescos" class="nav-link">Hongos Frescos</a></li>
+        <li><a href="#extractos" class="nav-link">Extractos</a></li>
+        <li><a href="#productos-especiales" class="nav-link">Productos Especiales</a></li>
+        <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
+        <li><a href="#contacto" class="nav-link">Contacto</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="cart-button" id="cartButton">
+          🛒 Carrito
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="inicio">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Hongos Frescos y Medicinales de la Más Alta Calidad</h1>
+          <p>Descubre el poder de la naturaleza con nuestros hongos frescos, extractos medicinales y productos
+            naturales. Cultivados con amor y dedicación para tu bienestar.</p>
+
+          <!-- Hongos Frescos Section -->
+          <section class="section" id="hongos-frescos">
+            <div class="container">
+              <div class="section-header">
+                <h2 class="section-title">Hongos Frescos</h2>
+                <p class="section-subtitle">Hongos ostra cultivados frescos, perfectos para tus recetas favoritas</p>
+              </div>
+
+              <div class="product-grid" id="freshMushroomsGrid">
+                <!-- Products will be loaded by JavaScript -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Extractos Medicinales Section -->
+          <section class="section" id="extractos" style="background: var(--color-light-gray);">
+            <div class="container">
+              <div class="section-header">
+                <h2 class="section-title">Extractos Medicinales</h2>
+                <p class="section-subtitle">Extractos de alta concentración para potenciar tu salud y bienestar</p>
+              </div>
+
+              <div class="product-grid" id="extractsGrid">
+                <!-- Products will be loaded by JavaScript -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Productos Especiales Section -->
+          <section class="section" id="productos-especiales">
+            <div class="container">
+              <div class="section-header">
+                <h2 class="section-title">Productos Especiales</h2>
+                <p class="section-subtitle">Microdosis y productos naturales para tu bienestar integral</p>
+              </div>
+
+              <div class="product-grid" id="specialProductsGrid">
+                <!-- Products will be loaded by JavaScript -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Sobre Nosotros Section -->
+          <section class="section" id="nosotros" style="background: var(--color-light-gray);">
+            <div class="container">
+              <div class="section-header">
+                <h2 class="section-title">Sobre Nosotros</h2>
+              </div>
+
+              <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-lg);">
+                  En <strong>SETAS</strong>, nos dedicamos a cultivar y ofrecer hongos frescos y productos medicinales
+                  de la más
+                  alta calidad. Nuestra pasión por la micología y el bienestar natural nos impulsa a proporcionar
+                  productos que
+                  mejoran la salud y el estilo de vida de nuestros clientes.
+                </p>
+                <p style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-lg);">
+                  Utilizamos técnicas de cultivo sostenibles y controladas para garantizar la pureza y potencia de cada
+                  producto. Desde hongos frescos para tu cocina hasta extractos medicinales concentrados, cada artículo
+                  es
+                  cuidadosamente producido con dedicación y experiencia.
+                </p>
+                <p style="font-size: var(--font-size-lg);">
+                  <strong>Nuestra misión:</strong> Conectar a las personas con el poder curativo de los hongos,
+                  ofreciendo
+                  productos naturales que promueven la salud, el bienestar y la vitalidad.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Registro de Usuarios Section -->
+          <section class="section" id="registro">
+            <div class="container">
+              <div class="section-header">
+                <h2 class="section-title">Únete a Nuestra Comunidad</h2>
+                <p class="section-subtitle">Regístrate para recibir promociones exclusivas y novedades</p>
+              </div>
+
+              <form id="registrationForm"
+                style="max-width: 600px; margin: 0 auto; background: var(--color-white); padding: var(--spacing-2xl); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+                <div class="form-group">
+                  <label for="name" class="form-label">Nombre Completo</label>
+                  <input type="text" id="name" name="name" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="email" class="form-label">Correo Electrónico</label>
+                  <input type="email" id="email" name="email" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="phone" class="form-label">Teléfono (Opcional)</label>
+                  <input type="tel" id="phone" name="phone" class="form-input">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Registrarme</button>
+              </form>
+            </div>
+          </section>
+
+          <!-- Contacto Section -->
+          <section class="section" id="contacto" style="background: var(--color-light-gray);">
+            <div class="container">
+              <div class="section-header">
+                <h2 class="section-title">Contacto y Pedidos</h2>
+                <p class="section-subtitle">¿Tienes preguntas? Estamos aquí para ayudarte</p>
+              </div>
+
+              <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-2xl); max-width: 1000px; margin: 0 auto;">
+                <div
+                  style="background: var(--color-white); padding: var(--spacing-2xl); border-radius: var(--radius-xl); text-align: center; box-shadow: var(--shadow-md);">
+                  <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">📱</div>
+                  <h3>WhatsApp</h3>
+                  <p style="margin-bottom: var(--spacing-lg);">Contáctanos directamente por WhatsApp</p>
+                  <a href="https://wa.me/593960945828?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20productos"
+                    class="btn btn-whatsapp" target="_blank">
+                    Abrir WhatsApp
+                  </a>
+                </div>
+
+                <div
+                  style="background: var(--color-white); padding: var(--spacing-2xl); border-radius: var(--radius-xl); text-align: center; box-shadow: var(--shadow-md);">
+                  <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">📷</div>
+                  <h3>Instagram</h3>
+                  <p style="margin-bottom: var(--spacing-lg);">Síguenos en Instagram</p>
+                  <a href="https://instagram.com/sff_accesorios" class="btn btn-instagram" target="_blank">
+                    Visitar Instagram
+                  </a>
+                </div>
+
+                <div
+                  style="background: var(--color-white); padding: var(--spacing-2xl); border-radius: var(--radius-xl); text-align: center; box-shadow: var(--shadow-md);">
+                  <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">✉️</div>
+                  <h3>Email</h3>
+                  <p style="margin-bottom: var(--spacing-lg);">Envíanos un correo</p>
+                  <a href="mailto:contacto@setas.com" class="btn btn-secondary">
+                    Enviar Email
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Footer -->
+          <footer class="footer">
+            <div class="container">
+              <div class="footer-content">
+                <div class="footer-section">
+                  <h3>SETAS</h3>
+                  <p>Hongos frescos y medicinales de la más alta calidad para tu bienestar.</p>
+                  <div class="social-links">
+                    <a href="https://wa.me/593960945828" class="social-link" target="_blank">📱</a>
+                    <a href="https://instagram.com/sff_accesorios" class="social-link" target="_blank">📷</a>
+                    <a href="https://facebook.com/setas_oficial" class="social-link" target="_blank">👍</a>
+                  </div>
+                </div>
+
+                <div class="footer-section">
+                  <h3>Productos</h3>
+                  <ul class="footer-links">
+                    <li><a href="#hongos-frescos">Hongos Frescos</a></li>
+                    <li><a href="#extractos">Extractos Medicinales</a></li>
+                    <li><a href="#productos-especiales">Productos Especiales</a></li>
+                  </ul>
+                </div>
+
+                <div class="footer-section">
+                  <h3>Información</h3>
+                  <ul class="footer-links">
+                    <li><a href="#nosotros">Sobre Nosotros</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="#registro">Registro</a></li>
+                  </ul>
+                </div>
+
+                <div class="footer-section">
+                  <h3>Legal</h3>
+                  <ul class="footer-links">
+                    <li><a href="#">Términos y Condiciones</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                    <li><a href="#">Política de Envíos</a></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="footer-bottom">
+                <p>&copy; 2025 SETAS. Todos los derechos reservados.</p>
+              </div>
+            </div>
+          </footer>
+
+          <!-- Cart Modal -->
+          <div class="cart-overlay" id="cartOverlay"></div>
+          <div class="cart-modal" id="cartModal">
+            <div class="cart-header">
+              <h3>Tu Carrito</h3>
+              <button class="cart-close" id="cartClose">&times;</button>
+            </div>
+
+            <div class="cart-items" id="cartItems">
+              <div class="cart-empty" id="cartEmpty">
+                <p>Tu carrito está vacío</p>
+              </div>
+            </div>
+
+            <div class="cart-footer" id="cartFooter" style="display: none;">
+              <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+              </div>
+              <button class="btn btn-whatsapp cart-checkout" id="checkoutWhatsApp">
+                Comprar por WhatsApp
+              </button>
+              <button class="btn btn-instagram cart-checkout" id="checkoutInstagram"
+                style="margin-top: var(--spacing-sm);">
+                Comprar por Instagram
+              </button>
+            </div>
+          </div>
+
+          <!-- JavaScript -->
+          <script src="script.js"></script>
+</body>
+
+</html>

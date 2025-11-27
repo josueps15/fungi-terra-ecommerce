@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículo - FUNGI TERRA</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .news-detail-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--spacing-2xl) var(--spacing-lg);
+        }
+
+        .news-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+            font-size: var(--font-size-sm);
+            color: var(--color-gray);
+        }
+
+        .news-breadcrumb a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .news-breadcrumb a:hover {
+            color: var(--color-primary-dark);
+        }
+
+        .news-header {
+            text-align: center;
+            margin-bottom: var(--spacing-3xl);
+        }
+
+        .news-header-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .news-header-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-dark);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.2;
+        }
+
+        .news-meta-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .news-date {
+            color: var(--color-gray);
+            font-size: var(--font-size-sm);
+        }
+
+        .news-category-badge {
+            background: var(--color-primary);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+        }
+
+        .news-tags {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        .news-tag-item {
+            background: var(--color-light-gray);
+            color: var(--color-dark);
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+        }
+
+        .news-content {
+            background: white;
+            padding: var(--spacing-2xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-3xl);
+            line-height: 1.8;
+        }
+
+        .news-content h3 {
+            color: var(--color-primary);
+            margin-top: var(--spacing-2xl);
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .news-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .news-content p {
+            margin-bottom: var(--spacing-lg);
+            color: var(--color-dark);
+        }
+
+        .news-content ul,
+        .news-content ol {
+            margin-bottom: var(--spacing-lg);
+            padding-left: var(--spacing-xl);
+        }
+
+        .news-content li {
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-dark);
+        }
+
+        .news-content strong {
+            color: var(--color-primary-dark);
+            font-weight: 600;
+        }
+
+        .related-products-section {
+            background: var(--color-light-gray);
+            padding: var(--spacing-2xl);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--spacing-3xl);
+        }
+
+        .related-products-title {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .related-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--color-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .back-button:hover {
+            background: var(--color-primary-dark);
+            transform: translateX(-5px);
+        }
+
+        .share-section {
+            text-align: center;
+            padding: var(--spacing-xl);
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .share-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-dark);
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .share-whatsapp {
+            background: #25D366;
+        }
+
+        .share-facebook {
+            background: #1877F2;
+        }
+
+        .share-twitter {
+            background: #1DA1F2;
+        }
+
+        @media (max-width: 768px) {
+            .news-header-title {
+                font-size: 2rem;
+            }
+
+            .news-content {
+                padding: var(--spacing-lg);
+            }
+
+            .related-products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="index.html" class="logo">FUNGI TERRA</a>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#inicio" class="nav-link">Inicio</a></li>
+                <li><a href="index.html#hongos-frescos" class="nav-link">Hongos Frescos</a></li>
+                <li><a href="index.html#extractos" class="nav-link">Extractos</a></li>
+                <li><a href="index.html#productos-especiales" class="nav-link">Productos Especiales</a></li>
+                <li><a href="index.html#combos" class="nav-link">Combos</a></li>
+                <li><a href="index.html#noticias" class="nav-link">Noticias</a></li>
+                <li><a href="index.html#contacto" class="nav-link">Contacto</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="cart-button" id="cartBtn">
+                    Carrito
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- News Detail Content -->
+    <main class="news-detail-container" style="margin-top: 100px;">
+        <!-- Breadcrumb -->
+        <div class="news-breadcrumb">
+            <a href="index.html">Inicio</a>
+            <span>›</span>
+            <a href="index.html#noticias">Noticias</a>
+            <span>›</span>
+            <span id="breadcrumbTitle">Artículo</span>
+        </div>
+
+        <!-- Back Button -->
+        <a href="index.html#noticias" class="back-button">
+            ← Volver a Noticias
+        </a>
+
+        <!-- Article Header -->
+        <div class="news-header">
+            <div class="news-header-icon" id="articleIcon">🧠</div>
+            <h1 class="news-header-title" id="articleTitle">Cargando...</h1>
+
+            <div class="news-meta-info">
+                <span class="news-date" id="articleDate">Fecha</span>
+                <span class="news-category-badge" id="articleCategory">Categoría</span>
+            </div>
+
+            <div class="news-tags" id="articleTags">
+                <!-- Tags will be loaded here -->
+            </div>
+        </div>
+
+        <button class="cart-close" id="closeCart">&times;</button>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty" id="cartEmpty">
+                <p>Tu carrito está vacío</p>
+            </div>
+        </div>
+
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="btn btn-whatsapp cart-checkout" id="checkoutWhatsApp">
+                Comprar por WhatsApp
+            </button>
+            <button class="btn btn-instagram cart-checkout" id="checkoutInstagram"
+                style="margin-top: var(--spacing-sm);">
+                Comprar por Instagram
+            </button>
+        </div>
+        </div>
+
+        <!-- JavaScript -->
+        <script src="news-data.js"></script>
+        <script src="script.js"></script>
+        <script src="news-detail.js"></script>
+</body>
+
+</html>
