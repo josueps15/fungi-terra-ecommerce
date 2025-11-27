@@ -14,6 +14,12 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 // Database Setup (PostgreSQL)
+if (!process.env.DATABASE_URL) {
+  console.error('❌ Error: DATABASE_URL environment variable is not set.');
+  console.error('Please configure it in your Render Dashboard.');
+  process.exit(1);
+}
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
