@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const { Pool } = require('pg');
 const path = require('path');
 
@@ -51,19 +51,11 @@ pool.connect((err, client, release) => {
   });
 });
 
-// Email Configuration
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  tls: {
-    rejectUnauthorized: false
-  },
-  logger: true, // Log to console
-  debug: true   // Include debug info
-});
+// Email Configuration (Resend)
+if (!process.env.RESEND_API_KEY) {
+  console.error('⚠️ Warning: RESEND_API_KEY not set. Email functionality will be disabled.');
+}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Routes
 
@@ -87,10 +79,10 @@ app.post('/api/register', async (req, res) => {
     // RESPONDER INMEDIATAMENTE AL CLIENTE
     res.json({ success: true, message: 'Registro exitoso', userId });
 
-    // Send Welcome Email (Background Process)
-    const mailOptions = {
-      from: '"FUNGI TERRA" <ecsetas@gmail.com>',
-      to: email,
+    // Send Welcome Email (Background Process with Resend)
+    resend.emails.send({
+      from: 'FUNGI TERRA <onboarding@resend.dev>',
+      to: [email],
       subject: '¡Bienvenido a la Familia Fungi Terra! 🍄',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
@@ -128,15 +120,10 @@ app.post('/api/register', async (req, res) => {
           </div>
         </div>
       `
-    };
-
-    // No esperamos a que el correo se envíe para responder
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error('Error sending email (Background):', error.message);
-      } else {
-        console.log('Email sent (Background):', info.response);
-      }
+    }).then(() => {
+      console.log('✅ Email sent successfully (Background):', email);
+    }).catch((error) => {
+      console.error('❌ Error sending email (Background):', error.message);
     });
 
   } catch (err) {
