@@ -84,7 +84,10 @@ app.post('/api/register', async (req, res) => {
     const userId = result.rows[0].id;
     console.log(`User registered: ${name} (${email})`);
 
-    // Send Welcome Email
+    // RESPONDER INMEDIATAMENTE AL CLIENTE
+    res.json({ success: true, message: 'Registro exitoso', userId });
+
+    // Send Welcome Email (Background Process)
     const mailOptions = {
       from: '"FUNGI TERRA" <ecsetas@gmail.com>',
       to: email,
@@ -127,13 +130,12 @@ app.post('/api/register', async (req, res) => {
       `
     };
 
+    // No esperamos a que el correo se envíe para responder
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error('Error sending email:', error);
-        res.json({ success: true, message: 'Registro exitoso (Email pendiente)', userId });
+        console.error('Error sending email (Background):', error.message);
       } else {
-        console.log('Email sent:', info.response);
-        res.json({ success: true, message: 'Registro exitoso y correo enviado', userId, emailSent: true });
+        console.log('Email sent (Background):', info.response);
       }
     });
 
