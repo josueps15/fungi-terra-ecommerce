@@ -159,6 +159,18 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+// Delete User (Admin)
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM users WHERE id = $1', [id]);
+    res.json({ success: true, message: 'Usuario eliminado correctamente' });
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ success: false, message: 'Error al eliminar usuario' });
+  }
+});
+
 // Get Stats
 app.get('/api/stats', async (req, res) => {
   try {
