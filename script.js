@@ -541,7 +541,7 @@ function initializeEventListeners() {
 
     try {
       // Enviar datos al servidor
-      const response = await fetch('http://localhost:3000/api/register', {
+      const response = await fetch('https://fungi-terra-ecommerce.onrender.com/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
