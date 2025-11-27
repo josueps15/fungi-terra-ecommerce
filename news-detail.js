@@ -147,9 +147,20 @@ function setupShareButtons() {
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
     document.getElementById('shareFacebook').href = facebookUrl;
 
-    // Twitter
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(currentUrl)}`;
-    document.getElementById('shareTwitter').href = twitterUrl;
+    // Instagram (Copy Link)
+    const instagramBtn = document.getElementById('shareInstagram');
+    if (instagramBtn) {
+        instagramBtn.onclick = (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(title + ' ' + currentUrl).then(() => {
+                alert('¡Enlace copiado! Pégalo en tu historia o post de Instagram.');
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+                // Fallback: open Instagram profile
+                window.open('https://instagram.com/setas_hongoscomestibles', '_blank');
+            });
+        };
+    }
 }
 
 // Initialize on page load
