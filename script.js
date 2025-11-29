@@ -423,6 +423,45 @@ function checkoutWhatsApp() {
   window.open(url, '_blank');
 }
 
+// PayPhone Checkout
+async function checkoutPayPhone() {
+  if (cart.length === 0) {
+    showNotification('Tu carrito está vacío');
+    return;
+  }
+
+  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  try {
+    showNotification('Procesando pago...');
+
+    const response = await fetch('https://fungi-terra-ecommerce.onrender.com/api/create-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount: total,
+        clientTransactionId: `ORDER-${Date.now()}`,
+        email: 'cliente@fungiterra.com',
+        phone: '0999999999'
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success && data.payUrl) {
+      // Redirigir a PayPhone para completar el pago
+      window.location.href = data.payUrl;
+    } else {
+      throw new Error(data.message || 'Error al procesar el pago');
+    }
+  } catch (error) {
+    console.error('Payment error:', error);
+    showNotification('Error al procesar el pago. Intenta nuevamente.');
+  }
+}
+
 function checkoutInstagram() {
   window.open('https://instagram.com/setas_hongoscomestibles', '_blank');
 }
@@ -482,10 +521,15 @@ function initializeEventListeners() {
 
   // Checkout Buttons
   const checkoutWhatsAppBtn = document.getElementById('checkoutWhatsApp');
+  const checkoutPayPhoneBtn = document.getElementById('checkoutPayPhone');
   const checkoutInstagramBtn = document.getElementById('checkoutInstagram');
 
   if (checkoutWhatsAppBtn) {
     checkoutWhatsAppBtn.addEventListener('click', checkoutWhatsApp);
+  }
+
+  if (checkoutPayPhoneBtn) {
+    checkoutPayPhoneBtn.addEventListener('click', checkoutPayPhone);
   }
 
   if (checkoutInstagramBtn) {

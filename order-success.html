@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Pedido Exitoso! - FUNGI TERRA</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .success-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f5f3f0 0%, #e8e4dc 100%);
+        }
+
+        .success-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #4a7c2c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .success-icon::after {
+            content: '✓';
+            font-size: 3rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .success-card h1 {
+            color: #2d5016;
+            margin-bottom: 1rem;
+        }
+
+        .success-card p {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: #25D366;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        .whatsapp-btn:hover {
+            background: #1da851;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
+        .home-link {
+            display: block;
+            color: #2d5016;
+            margin-top: 1rem;
+            text-decoration: none;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="success-container">
+        <div class="success-card">
+            <div class="success-icon"></div>
+            <h1>¡Pago Exitoso! 🎉</h1>
+            <p>
+                Tu pedido ha sido procesado correctamente.
+                Recibirás un email de confirmación en breve.
+            </p>
+            <p>
+                <strong>Nos pondremos en contacto contigo para coordinar la entrega.</strong>
+            </p>
+
+            <a href="https://wa.me/593960945828?text=Hola%2C%20acabo%20de%20hacer%20un%20pedido%20en%20FUNGI%20TERRA"
+                class="whatsapp-btn" target="_blank">
+                📱 Contactar por WhatsApp
+            </a>
+
+            <a href="/" class="home-link">← Volver a la tienda</a>
+        </div>
+    </div>
+
+    <script>
+        // Limpiar carrito después de compra exitosa
+        localStorage.removeItem('cart');
+
+        // Actualizar contador del carrito
+        const cartCount = document.getElementById('cartCount');
+        if (cartCount) {
+            cartCount.textContent = '0';
+        }
+    </script>
+</body>
+
+</html>

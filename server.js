@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
 const { Resend } = require('resend');
 const { Pool } = require('pg');
 const path = require('path');
@@ -172,4 +173,55 @@ app.get('/api/stats', async (req, res) => {
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// PayPhone Payment Endpoint
+app.post('/api/create-payment', async (req, res) => {
+  const { amount, clientTransactionId, email, phone } = req.body;
+
+  if (!amount || amount <= 0) {
+    return res.status(400).json({ success: false, message: 'Monto inválido' });
+  }
+
+  try {
+    const paymentData = {
+      amount: parseFloat(amount),
+      amountWithoutTax: parseFloat(amount),
+      clientTransactionId: clientTransactionId || `ORDER-${Date.now()}`,
+      currency: 'USD',
+      email: email || 'cliente@fungiterra.com',
+      phoneNumber: phone || '0999999999',
+      responseUrl: `${req.protocol}://${req.get('host')}/order-success.html`,
+      cancellationUrl: `${req.protocol}://${req.get('host')}/`,
+      storeId: process.env.PAYPHONE_STORE_ID
+    };
+
+    console.log('Creating PayPhone payment:', paymentData);
+
+    const response = await axios.post(
+      'https://pay.payphonetodoesposible.com/api/button/Prepare',
+      paymentData,
+      {
+        headers: {
+          'Authorization': `Bearer ${process.env.PAYPHONE_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log('PayPhone response:', response.data);
+
+    res.json({
+      success: true,
+      payUrl: response.data.payWithCard,
+      transactionId: response.data.transactionId
+    });
+  } catch (error) {
+    console.error('PayPhone error:', error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Error al crear el pago',
+      error: error.response?.data || error.message
+    });
+  }
 });
