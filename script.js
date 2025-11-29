@@ -607,26 +607,26 @@ function initializeScrollEffects() {
 
 // Mobile Menu Toggle
 const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-const navLinks = document.querySelector('.nav-links');
+const navMenu = document.querySelector('.nav-menu');
 
-if (mobileMenuToggle && navLinks) {
+if (mobileMenuToggle && navMenu) {
   mobileMenuToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
+    navMenu.classList.toggle('active');
     mobileMenuToggle.classList.toggle('active');
   });
 
   // Close menu when clicking on a link
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
-      navLinks.classList.remove('active');
+      navMenu.classList.remove('active');
       mobileMenuToggle.classList.remove('active');
     });
   });
 
   // Close menu when clicking outside
   document.addEventListener('click', (e) => {
-    if (!navLinks.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-      navLinks.classList.remove('active');
+    if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+      navMenu.classList.remove('active');
       mobileMenuToggle.classList.remove('active');
     }
   });
