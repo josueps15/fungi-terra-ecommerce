@@ -426,252 +426,214 @@ function checkoutWhatsApp() {
 // PayPhone Checkout
 async function checkoutPayPhone() {
   if (cart.length === 0) {
-    showNotification('Tu carrito está vacío');
-    return;
-  }
-
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  try {
-    showNotification('Procesando pago...');
-
-    const response = await fetch('https://fungi-terra-ecommerce.onrender.com/api/create-payment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        amount: total,
-        clientTransactionId: `ORDER-${Date.now()}`,
-        email: 'cliente@fungiterra.com',
-        phone: '0999999999'
-      })
-    });
-
-    const data = await response.json();
-
-    if (data.success && data.payUrl) {
-      // Redirigir a PayPhone para completar el pago
-      window.location.href = data.payUrl;
-    } else {
-      throw new Error(data.message || 'Error al procesar el pago');
-    }
-  } catch (error) {
-    console.error('Payment error:', error);
-    showNotification('Error al procesar el pago. Intenta nuevamente.');
-  }
-}
-
-function checkoutInstagram() {
-  window.open('https://instagram.com/setas_hongoscomestibles', '_blank');
-}
-
-// Notification System
-function showNotification(message) {
-  // Remove existing notifications
-  const existing = document.querySelector('.notification');
-  if (existing) {
-    existing.remove();
-  }
-
-  const notification = document.createElement('div');
-  notification.className = 'notification';
-  notification.textContent = message;
-  document.body.appendChild(notification);
-
-  setTimeout(() => {
-    notification.classList.add('show');
-  }, 10);
-
-  setTimeout(() => {
-    notification.classList.remove('show');
-    setTimeout(() => {
-      notification.remove();
-    }, 300);
-  }, 3000);
-}
-
-// Event Listeners
-function initializeEventListeners() {
-  // Cart Toggle
-  const cartBtn = document.getElementById('cartBtn');
-  const cartModal = document.getElementById('cartModal');
-  const closeCart = document.getElementById('closeCart');
-
-  if (cartBtn && cartModal) {
-    cartBtn.addEventListener('click', () => {
-      cartModal.classList.add('active');
-    });
-  }
-
-  if (closeCart && cartModal) {
-    closeCart.addEventListener('click', () => {
-      cartModal.classList.remove('active');
-    });
-  }
-
-  // Close cart when clicking outside
-  if (cartModal) {
-    cartModal.addEventListener('click', (e) => {
-      if (e.target === cartModal) {
-        cartModal.classList.remove('active');
-      }
-    });
-  }
-
-  // Checkout Buttons
-  const checkoutWhatsAppBtn = document.getElementById('checkoutWhatsApp');
-  const checkoutPayPhoneBtn = document.getElementById('checkoutPayPhone');
-  const checkoutInstagramBtn = document.getElementById('checkoutInstagram');
-
-  if (checkoutWhatsAppBtn) {
-    checkoutWhatsAppBtn.addEventListener('click', checkoutWhatsApp);
-  }
-
-  if (checkoutPayPhoneBtn) {
-    checkoutPayPhoneBtn.addEventListener('click', checkoutPayPhone);
-  }
-
-  if (checkoutInstagramBtn) {
-    checkoutInstagramBtn.addEventListener('click', checkoutInstagram);
-  }
-
-  // Mobile Menu
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const navLinks = document.querySelector('.nav-links');
-
-  if (mobileMenuBtn && navLinks) {
-    mobileMenuBtn.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
   }
 
   // Notification System
-  function showNotification(message, type = 'success') {
-    // Remove existing notification if any
+  function showNotification(message) {
+    // Remove existing notifications
     const existing = document.querySelector('.notification');
-    if (existing) existing.remove();
+    if (existing) {
+      existing.remove();
+    }
 
     const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
+    notification.className = 'notification';
     notification.textContent = message;
     document.body.appendChild(notification);
 
-    // Show notification
-    setTimeout(() => notification.classList.add('show'), 100);
+    setTimeout(() => {
+      notification.classList.add('show');
+    }, 10);
 
-    // Auto dismiss after 5 seconds
     setTimeout(() => {
       notification.classList.remove('show');
-      setTimeout(() => notification.remove(), 300);
-    }, 5000);
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    }, 3000);
   }
 
-  // Registration Form
-  const registrationForm = document.getElementById('registrationForm');
-  registrationForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  // Event Listeners
+  function initializeEventListeners() {
+    // Cart Toggle
+    const cartBtn = document.getElementById('cartBtn');
+    const cartModal = document.getElementById('cartModal');
+    const closeCart = document.getElementById('closeCart');
 
-    const formData = new FormData(registrationForm);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const phone = formData.get('phone');
-
-    // Deshabilitar botón mientras se procesa
-    const submitButton = registrationForm.querySelector('button[type="submit"]');
-    const originalText = submitButton.textContent;
-    submitButton.disabled = true;
-    submitButton.textContent = 'Registrando...';
-
-    try {
-      // Enviar datos al servidor
-      const response = await fetch('https://fungi-terra-ecommerce.onrender.com/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, phone })
+    if (cartBtn && cartModal) {
+      cartBtn.addEventListener('click', () => {
+        cartModal.classList.add('active');
       });
+    }
 
-      const data = await response.json();
+    if (closeCart && cartModal) {
+      closeCart.addEventListener('click', () => {
+        cartModal.classList.remove('active');
+      });
+    }
 
-      if (data.success) {
-        showNotification('¡Gracias por registrarte! Revisa tu email para el mensaje de bienvenida.', 'success');
-        registrationForm.reset();
+    // Close cart when clicking outside
+    if (cartModal) {
+      cartModal.addEventListener('click', (e) => {
+        if (e.target === cartModal) {
+          cartModal.classList.remove('active');
+        }
+      });
+    }
+
+    // Checkout Buttons
+    const checkoutWhatsAppBtn = document.getElementById('checkoutWhatsApp');
+    const checkoutPayPhoneBtn = document.getElementById('checkoutPayPhone');
+    const checkoutInstagramBtn = document.getElementById('checkoutInstagram');
+
+    if (checkoutWhatsAppBtn) {
+      checkoutWhatsAppBtn.addEventListener('click', checkoutWhatsApp);
+    }
+
+    if (checkoutPayPhoneBtn) {
+      checkoutPayPhoneBtn.addEventListener('click', checkoutPayPhone);
+    }
+
+    if (checkoutInstagramBtn) {
+      checkoutInstagramBtn.addEventListener('click', checkoutInstagram);
+    }
+
+    // Mobile Menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (mobileMenuBtn && navLinks) {
+      mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+      });
+    }
+
+    // Notification System
+    function showNotification(message, type = 'success') {
+      // Remove existing notification if any
+      const existing = document.querySelector('.notification');
+      if (existing) existing.remove();
+
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+
+      // Show notification
+      setTimeout(() => notification.classList.add('show'), 100);
+
+      // Auto dismiss after 5 seconds
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+      }, 5000);
+    }
+
+    // Registration Form
+    const registrationForm = document.getElementById('registrationForm');
+    registrationForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(registrationForm);
+      const name = formData.get('name');
+      const email = formData.get('email');
+      const phone = formData.get('phone');
+
+      // Deshabilitar botón mientras se procesa
+      const submitButton = registrationForm.querySelector('button[type="submit"]');
+      const originalText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = 'Registrando...';
+
+      try {
+        // Enviar datos al servidor
+        const response = await fetch('https://fungi-terra-ecommerce.onrender.com/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, phone })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showNotification('¡Gracias por registrarte! Revisa tu email para el mensaje de bienvenida.', 'success');
+          registrationForm.reset();
+        } else {
+          showNotification(data.message || 'Error al registrar. Intenta nuevamente.', 'error');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error de conexión. Asegúrate de que el servidor esté ejecutándose.', 'error');
+      } finally {
+        // Rehabilitar botón
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+      }
+    });
+
+    // Header Scroll Effect
+    const header = document.querySelector('.header');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+
+      if (currentScroll > 100) {
+        header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
       } else {
-        showNotification(data.message || 'Error al registrar. Intenta nuevamente.', 'error');
+        header.style.boxShadow = 'none';
       }
-    } catch (error) {
-      console.error('Error:', error);
-      showNotification('Error de conexión. Asegúrate de que el servidor esté ejecutándose.', 'error');
-    } finally {
-      // Rehabilitar botón
-      submitButton.disabled = false;
-      submitButton.textContent = originalText;
-    }
-  });
 
-  // Header Scroll Effect
-  const header = document.querySelector('.header');
-  let lastScroll = 0;
+      lastScroll = currentScroll;
+    });
+  }
 
-  window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
+  // Scroll Effects
+  function initializeScrollEffects() {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
 
-    if (currentScroll > 100) {
-      header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-    } else {
-      header.style.boxShadow = 'none';
-    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in');
+        }
+      });
+    }, observerOptions);
 
-    lastScroll = currentScroll;
-  });
-}
+    // Observe all sections
+    document.querySelectorAll('section').forEach(section => {
+      observer.observe(section);
+    });
+  }
 
-// Scroll Effects
-function initializeScrollEffects() {
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
+  // Mobile Menu Toggle
+  const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+  const navMenu = document.querySelector('.nav-menu');
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('fade-in');
+  if (mobileMenuToggle && navMenu) {
+    mobileMenuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      mobileMenuToggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        mobileMenuToggle.classList.remove('active');
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+        navMenu.classList.remove('active');
+        mobileMenuToggle.classList.remove('active');
       }
     });
-  }, observerOptions);
-
-  // Observe all sections
-  document.querySelectorAll('section').forEach(section => {
-    observer.observe(section);
-  });
-}
-
-// Mobile Menu Toggle
-const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-const navMenu = document.querySelector('.nav-menu');
-
-if (mobileMenuToggle && navMenu) {
-  mobileMenuToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    mobileMenuToggle.classList.toggle('active');
-  });
-
-  // Close menu when clicking on a link
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      navMenu.classList.remove('active');
-      mobileMenuToggle.classList.remove('active');
-    });
-  });
-
-  // Close menu when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-      navMenu.classList.remove('active');
-      mobileMenuToggle.classList.remove('active');
-    }
-  });
-}
+  }
