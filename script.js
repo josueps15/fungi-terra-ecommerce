@@ -418,9 +418,11 @@ function checkoutWhatsApp() {
 
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   message += `*Total: $${total.toFixed(2)}*`;
-  showNotification('Error al procesar el pago. Intenta nuevamente.');
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
 }
-}
+
 
 function checkoutInstagram() {
   window.open('https://instagram.com/setas_hongoscomestibles', '_blank');
