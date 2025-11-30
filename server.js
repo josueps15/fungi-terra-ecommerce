@@ -175,7 +175,7 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// PayPhone Payment Endpoint
+// PayPhone Payment Endpoint (Cajita de Pago)
 app.post('/api/create-payment', async (req, res) => {
   const { amount, clientTransactionId, email, phone } = req.body;
 
@@ -191,15 +191,13 @@ app.post('/api/create-payment', async (req, res) => {
       currency: 'USD',
       email: email || 'cliente@fungiterra.com',
       phoneNumber: phone || '0999999999',
-      responseUrl: `${req.protocol}://${req.get('host')}/order-success.html`,
-      cancellationUrl: `${req.protocol}://${req.get('host')}/`,
       storeId: process.env.PAYPHONE_STORE_ID
     };
 
-    console.log('Creating PayPhone payment:', paymentData);
+    console.log('Creating PayPhone payment (Cajita):', paymentData);
 
     const response = await axios.post(
-      'https://pay.payphonetodoesposible.com/api/button/Prepare',
+      'https://pay.payphonetodoesposible.com/api/Sale/Prepare',
       paymentData,
       {
         headers: {
@@ -213,8 +211,8 @@ app.post('/api/create-payment', async (req, res) => {
 
     res.json({
       success: true,
-      payUrl: response.data.payWithCard,
-      transactionId: response.data.transactionId
+      transactionId: response.data.transactionId,
+      clientTransactionId: response.data.clientTransactionId
     });
   } catch (error) {
     console.error('PayPhone error:', error.response?.data || error.message);

@@ -418,48 +418,8 @@ function checkoutWhatsApp() {
 
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   message += `*Total: $${total.toFixed(2)}*`;
-
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  window.open(url, '_blank');
+  showNotification('Error al procesar el pago. Intenta nuevamente.');
 }
-
-// PayPhone Checkout
-async function checkoutPayPhone() {
-  if (cart.length === 0) {
-    showNotification('Tu carrito está vacío');
-    return;
-  }
-
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  try {
-    showNotification('Procesando pago...');
-
-    const response = await fetch('https://fungi-terra-ecommerce.onrender.com/api/create-payment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        amount: total,
-        clientTransactionId: `ORDER-${Date.now()}`,
-        email: 'cliente@fungiterra.com',
-        phone: '0999999999'
-      })
-    });
-
-    const data = await response.json();
-    console.log('PayPhone response:', data);
-
-    if (data.success && data.payUrl) {
-      window.location.href = data.payUrl;
-    } else {
-      showNotification(`Error: ${data.message || 'No se pudo crear el pago'}`);
-    }
-  } catch (error) {
-    console.error('Payment error:', error);
-    showNotification('Error al procesar el pago. Intenta nuevamente.');
-  }
 }
 
 function checkoutInstagram() {
