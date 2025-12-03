@@ -188,39 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCart();
   initializeEventListeners();
   initializeScrollEffects();
-  createDateTimeDisplay();
 });
 
-// Date and Time Display
-function createDateTimeDisplay() {
-  const navActions = document.querySelector('.nav-actions');
-  if (!navActions) return;
 
-  const display = document.createElement('div');
-  display.className = 'date-time-display';
-
-  // Insert before the cart button (first child usually)
-  navActions.insertBefore(display, navActions.firstChild);
-
-  function updateTime() {
-    const now = new Date();
-    const options = {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    };
-    // Capitalize first letter
-    const timeString = now.toLocaleDateString('es-ES', options);
-    display.textContent = timeString.charAt(0).toUpperCase() + timeString.slice(1);
-  }
-
-  updateTime();
-  setInterval(updateTime, 1000);
-}
 
 // Load Products
 function loadProducts() {
