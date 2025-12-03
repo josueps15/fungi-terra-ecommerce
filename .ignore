@@ -4,8 +4,6 @@ node_modules/
 .DS_Store
 dist/
 .vscode/
-
-# Ignore large/corrupted files
 *.corrupted*
 *.backup*
 *.log

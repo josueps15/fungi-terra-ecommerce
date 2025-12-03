@@ -188,7 +188,39 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCart();
   initializeEventListeners();
   initializeScrollEffects();
+  createDateTimeDisplay();
 });
+
+// Date and Time Display
+function createDateTimeDisplay() {
+  const navActions = document.querySelector('.nav-actions');
+  if (!navActions) return;
+
+  const display = document.createElement('div');
+  display.className = 'date-time-display';
+
+  // Insert before the cart button (first child usually)
+  navActions.insertBefore(display, navActions.firstChild);
+
+  function updateTime() {
+    const now = new Date();
+    const options = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    };
+    // Capitalize first letter
+    const timeString = now.toLocaleDateString('es-ES', options);
+    display.textContent = timeString.charAt(0).toUpperCase() + timeString.slice(1);
+  }
+
+  updateTime();
+  setInterval(updateTime, 1000);
+}
 
 // Load Products
 function loadProducts() {
@@ -329,12 +361,12 @@ function updateQuantity(productId, change) {
 
 // Save Cart to LocalStorage
 function saveCart() {
-  localStorage.setItem('setasCart', JSON.stringify(cart));
+  localStorage.setItem('biorganixCart', JSON.stringify(cart));
 }
 
 // Load Cart from LocalStorage
 function loadCart() {
-  const savedCart = localStorage.getItem('setasCart');
+  const savedCart = localStorage.getItem('biorganixCart');
   if (savedCart) {
     cart = JSON.parse(savedCart);
     updateCartUI();
@@ -593,21 +625,32 @@ function initializeEventListeners() {
 // Scroll Effects
 function initializeScrollEffects() {
   const observerOptions = {
-    threshold: 0.1,
+    threshold: 0.15, // Trigger when 15% of the element is visible
     rootMargin: '0px 0px -50px 0px'
   };
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('fade-in');
+        entry.target.classList.add('is-visible');
+        // Optional: Stop observing once visible to save performance
+        // observer.unobserve(entry.target);
       }
     });
   }, observerOptions);
 
-  // Observe all sections
-  document.querySelectorAll('section').forEach(section => {
-    observer.observe(section);
+  // Elements to animate
+  const animatedElements = document.querySelectorAll('.section-title, .section-subtitle, .product-card, .news-card, .hero-text, .hero-image');
+
+  animatedElements.forEach((el, index) => {
+    el.classList.add('reveal-on-scroll');
+    // Add staggered delay for grid items
+    if (el.classList.contains('product-card') || el.classList.contains('news-card')) {
+      // Reset transition delay based on index in grid (modulo 3 for rows of 3)
+      // This is a simple approximation, for better results we'd need to know the row index
+      el.style.transitionDelay = `${(index % 3) * 100}ms`;
+    }
+    observer.observe(el);
   });
 }
 
