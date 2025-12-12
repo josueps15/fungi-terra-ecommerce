@@ -231,6 +231,11 @@ function goToProductDetail(productId) {
   window.location.href = `product-detail.html?id=${productId}`;
 }
 
+// Navigate to news detail page
+function goToNewsDetail(articleId) {
+  window.location.href = `news-detail.html?id=${articleId}`;
+}
+
 // Render Combos (special styling for combo products)
 function renderCombos(gridId, comboList) {
   const grid = document.getElementById(gridId);
