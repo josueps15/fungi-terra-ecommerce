@@ -126,7 +126,7 @@ const products = {
       id: 'sandy-milk',
       name: 'Leche de Sandy',
       category: 'Productos Especiales',
-      description: 'Leche vegetal natural de sandy, rica en nutrientes. Perfecta para batidos y bebidas saludables.',
+      description: 'Medicina natural de la Amazonía ecuatoriana. Ideal para tratar gastritis, reflujo ácido y eliminar Helicobacter pylori. Rico en vitaminas y minerales para la salud digestiva.',
       price: 10.00,
       image: 'oyster_white_mushroom_1763764129658.png',
       unit: 'botella 300ml'

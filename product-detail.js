@@ -217,30 +217,58 @@ function loadBenefits() {
       ];
     }
   }
-  // Microdoses
+  // Microdoses and Special Products
   else if (currentProduct.category === 'Productos Especiales') {
-    benefits = [
-      {
-        icon: '💊',
-        title: 'Dosis Precisa',
-        description: 'Cápsulas con dosificación exacta y consistente'
-      },
-      {
-        icon: '📅',
-        title: 'Uso Diario',
-        description: 'Fácil de incorporar en tu rutina diaria'
-      },
-      {
-        icon: '🌿',
-        title: 'Extracto Puro',
-        description: 'Sin rellenos ni ingredientes innecesarios'
-      },
-      {
-        icon: '✅',
-        title: 'Conveniente',
-        description: 'Portátil y fácil de tomar en cualquier lugar'
-      }
-    ];
+    // Special handling for Leche de Sandy
+    if (currentProduct.id === 'sandy-milk') {
+      benefits = [
+        {
+          icon: '🌿',
+          title: 'Salud Digestiva',
+          description: 'Alivia gastritis, reflujo ácido y úlceras estomacales'
+        },
+        {
+          icon: '🦠',
+          title: 'Elimina H. Pylori',
+          description: 'Combate la bacteria Helicobacter pylori naturalmente'
+        },
+        {
+          icon: '💊',
+          title: 'Medicina Amazónica',
+          description: 'Producto natural de la selva ecuatoriana'
+        },
+        {
+          icon: '🛡️',
+          title: 'Rico en Nutrientes',
+          description: 'Vitaminas, minerales y propiedades curativas'
+        }
+      ];
+    }
+    // Standard microdosis benefits
+    else {
+      benefits = [
+        {
+          icon: '💊',
+          title: 'Dosis Precisa',
+          description: 'Cápsulas con dosificación exacta y consistente'
+        },
+        {
+          icon: '📅',
+          title: 'Uso Diario',
+          description: 'Fácil de incorporar en tu rutina diaria'
+        },
+        {
+          icon: '🌿',
+          title: 'Extracto Puro',
+          description: 'Sin rellenos ni ingredientes innecesarios'
+        },
+        {
+          icon: '✅',
+          title: 'Conveniente',
+          description: 'Portátil y fácil de tomar en cualquier lugar'
+        }
+      ];
+    }
   }
 
   benefitsGrid.innerHTML = benefits.map(benefit => `
@@ -322,40 +350,87 @@ function loadUsageInfo() {
       </ul>
     `;
   }
-  // Microdoses
+  // Microdoses and Special Products
   else if (currentProduct.category === 'Productos Especiales') {
-    usageText = `
-      <p><strong>💊 Dosificación:</strong></p>
-      <ul>
-        <li>📏 <strong>Dosis Diaria:</strong> 1-2 cápsulas al día</li>
-        <li>⏰ <strong>Horario:</strong> Por la mañana con el desayuno</li>
-        <li>💧 <strong>Con Agua:</strong> Tomar con un vaso lleno de agua</li>
-        <li>🍽️ <strong>Con Comida:</strong> Preferiblemente con alimentos para mejor absorción</li>
-      </ul>
-      
-      <p><strong>📅 Protocolo Recomendado:</strong></p>
-      <ul>
-        <li>🔄 <strong>Ciclo 5-2:</strong> 5 días tomando, 2 días de descanso</li>
-        <li>📆 <strong>Duración:</strong> Mínimo 1 mes para ver resultados</li>
-        <li>⚡ <strong>Inicio:</strong> Comenzar con 1 cápsula y aumentar si es necesario</li>
-        <li>📊 <strong>Seguimiento:</strong> Llevar un diario de efectos y beneficios</li>
-      </ul>
-      
-      <p><strong>💡 Consejos de Uso:</strong></p>
-      <ul>
-        <li>🕐 Tomar siempre a la misma hora para crear rutina</li>
-        <li>💪 Combinar con meditación o ejercicio para potenciar efectos</li>
-        <li>📝 Anotar cambios en energía, enfoque y bienestar</li>
-        <li>🌙 Si causa insomnio, tomar más temprano en el día</li>
-      </ul>
-      
-      <p><strong>⚠️ Importante:</strong></p>
-      <ul>
-        <li>No sustituye una dieta equilibrada</li>
-        <li>Consultar con profesional si estás embarazada o amamantando</li>
-        <li>Mantener fuera del alcance de niños</li>
-      </ul>
-    `;
+    // Special handling for Leche de Sandy
+    if (currentProduct.id === 'sandy-milk') {
+      usageText = `
+        <p><strong>💧 Dosificación Recomendada:</strong></p>
+        <ul>
+          <li>📏 <strong>Dosis Estándar:</strong> 1 cucharada (15ml) 2-3 veces al día</li>
+          <li>⏰ <strong>Frecuencia:</strong> Antes de cada comida principal</li>
+          <li>🕐 <strong>Mejor Momento:</strong> 15-30 minutos antes de desayuno, almuerzo y cena</li>
+          <li>🍽️ <strong>Con o Sin Comida:</strong> Preferiblemente con el estómago vacío</li>
+        </ul>
+        
+        <p><strong>🥤 Formas de Consumo:</strong></p>
+        <ul>
+          <li>💧 Directo - tomar directamente de la cuchara</li>
+          <li>💦 Mezclado en un vaso de agua tibia</li>
+          <li>🍵 Agregado a té de hierbas</li>
+          <li>🥄 Puro antes de las comidas</li>
+        </ul>
+        
+        <p><strong>⚡ Para Mejores Resultados:</strong></p>
+        <ul>
+          <li>🔄 Usar consistentemente durante al menos 1-2 meses</li>
+          <li>📅 Tomar regularmente sin saltarse dosis</li>
+          <li>💪 Combinar con dieta baja en irritantes (picante, alcohol, café)</li>
+          <li>💧 Agitar bien antes de cada uso</li>
+        </ul>
+        
+        <p><strong>🎯 Tratamiento de Gastritis y H. Pylori:</strong></p>
+        <ul>
+          <li>📆 Duración mínima: 30 días continuos</li>
+          <li>🔄 Para casos crónicos: 60-90 días</li>
+          <li>💊 Puede combinarse con tratamiento médico (consultar doctor)</li>
+          <li>📊 Notar mejoría en síntomas después de 1-2 semanas</li>
+        </ul>
+        
+        <p><strong>⚠️ Consideraciones:</strong></p>
+        <ul>
+          <li>Evitar alimentos irritantes durante el tratamiento</li>
+          <li>Consultar con profesional de salud si estás tomando medicamentos</li>
+          <li>No exceder la dosis recomendada</li>
+          <li>Mantener hidratación adecuada</li>
+        </ul>
+      `;
+    }
+    // Standard microdosis usage
+    else {
+      usageText = `
+        <p><strong>💊 Dosificación:</strong></p>
+        <ul>
+          <li>📏 <strong>Dosis Diaria:</strong> 1-2 cápsulas al día</li>
+          <li>⏰ <strong>Horario:</strong> Por la mañana con el desayuno</li>
+          <li>💧 <strong>Con Agua:</strong> Tomar con un vaso lleno de agua</li>
+          <li>🍽️ <strong>Con Comida:</strong> Preferiblemente con alimentos para mejor absorción</li>
+        </ul>
+        
+        <p><strong>📅 Protocolo Recomendado:</strong></p>
+        <ul>
+          <li>🔄 <strong>Ciclo 5-2:</strong> 5 días tomando, 2 días de descanso</li>
+          <li>📆 <strong>Duración:</strong> Mínimo 1 mes para ver resultados</li>
+          <li>⚡ <strong>Inicio:</strong> Comenzar con 1 cápsula y aumentar si es necesario</li>
+          <li>📊 <strong>Seguimiento:</strong> Llevar un diario de efectos y beneficios</li>
+        </ul>
+        
+        <p><strong>💡 Consejos de Uso:</strong></p>
+        <ul>
+          <li>🕐 Tomar siempre a la misma hora para crear rutina</li>
+          <li>💪 Combinar con meditación o ejercicio para potenciar efectos</li>
+          <li>📝 Anotar cambios en energía, enfoque y bienestar</li>
+          <li>🌙 Si causa insomnio, tomar más temprano en el día</li>
+        </ul>
+        
+        <p><strong>⚠️ Importante:</strong></p>
+        <ul>
+          <li>No sustituye una dieta equilibrada</li>
+          <li>Consultar con profesional si estás embarazada o amamantando</li>
+          <li>Mantener fuera del alcance de niños</li>
+        </ul>
+      `;
+    }
   }
   // Combos
   else if (currentProduct.id.includes('combo')) {
@@ -486,51 +561,93 @@ function loadStorageInfo() {
       <p><strong>💡 Tip Pro:</strong> Si notas sedimento en el fondo, ¡es normal! Simplemente agita bien el frasco antes de usar. Esto indica que es un extracto natural sin filtración excesiva.</p>
     `;
   }
-  // Microdoses
+  // Microdoses and Special Products
   else if (currentProduct.category === 'Productos Especiales') {
-    storageText = `
-      <p><strong>🏠 Almacenamiento Ideal:</strong></p>
-      <ul>
-        <li>🌡️ Guardar en lugar fresco y seco (15-25°C)</li>
-        <li>🌙 Alejado de luz solar directa y humedad</li>
-        <li>🔒 Mantener el frasco bien cerrado</li>
-        <li>🚫 No refrigerar - puede causar condensación</li>
-        <li>👶 Mantener fuera del alcance de niños</li>
-      </ul>
-      
-      <p><strong>⏰ Vida Útil y Potencia:</strong></p>
-      <ul>
-        <li>📦 <strong>Sin Abrir:</strong> 2 años desde fabricación</li>
-        <li>🔓 <strong>Después de Abrir:</strong> 12 meses para máxima potencia</li>
-        <li>💊 Las cápsulas mantienen mejor la potencia que polvos sueltos</li>
-        <li>📅 Anotar fecha de apertura en el frasco</li>
-      </ul>
-      
-      <p><strong>✅ Señales de Buena Conservación:</strong></p>
-      <ul>
-        <li>✓ Cápsulas intactas y sin deformaciones</li>
-        <li>✓ Color uniforme del contenido</li>
-        <li>✓ Sin olor fuerte o rancio</li>
-        <li>✓ Frasco seco por dentro (sin humedad)</li>
-      </ul>
-      
-      <p><strong>⚠️ No Consumir Si:</strong></p>
-      <ul>
-        <li>✗ Las cápsulas están pegajosas o deformadas</li>
-        <li>✗ Hay cambio de color significativo</li>
-        <li>✗ Presencia de moho o humedad en el frasco</li>
-        <li>✗ Olor desagradable al abrir</li>
-      </ul>
-      
-      <p><strong>🧳 Para Viajes:</strong></p>
-      <ul>
-        <li>✈️ Llevar en el envase original con etiqueta</li>
-        <li>🎒 Usar pastillero solo para dosis de 1-2 días</li>
-        <li>🌡️ Evitar dejar en auto bajo sol directo</li>
-      </ul>
-      
-      <p><strong>💡 Tip Pro:</strong> Incluye un paquete de sílica gel en el frasco para absorber humedad y mantener las cápsulas en perfectas condiciones por más tiempo.</p>
-    `;
+    // Special handling for Leche de Sandy
+    if (currentProduct.id === 'sandy-milk') {
+      storageText = `
+        <p><strong>🏠 Almacenamiento Ideal:</strong></p>
+        <ul>
+          <li>❄️ Refrigerar después de abrir (2-8°C)</li>
+          <li>🌙 Mantener alejado de luz solar directa</li>
+          <li>🔒 Mantener la botella bien cerrada después de cada uso</li>
+          <li>📍 Almacenar en posición vertical</li>
+          <li>🚫 No congelar</li>
+        </ul>
+        
+        <p><strong>⏰ Vida Útil:</strong></p>
+        <ul>
+          <li>📦 <strong>Sin Abrir:</strong> 12 meses en lugar fresco y seco</li>
+          <li>🔓 <strong>Después de Abrir:</strong> 30 días refrigerado</li>
+          <li>📅 Revisar fecha de vencimiento en la etiqueta</li>
+          <li>✍️ Marcar la fecha de apertura en la botella</li>
+        </ul>
+        
+        <p><strong>✅ Señales de Buena Conservación:</strong></p>
+        <ul>
+          <li>✓ Color blanco uniforme (puede tener ligera separación natural)</li>
+          <li>✓ Aroma fresco y suave</li>
+          <li>✓ Textura líquida (agitar antes de usar)</li>
+          <li>✓ Sabor característico sin amargor excesivo</li>
+        </ul>
+        
+        <p><strong>⚠️ No Consumir Si:</strong></p>
+        <ul>
+          <li>✗ Tiene olor agrio o fermentado</li>
+          <li>✗ El color ha cambiado significativamente</li>
+          <li>✗ Presenta grumos o moho visible</li>
+          <li>✗ Ha estado más de 30 días abierto</li>
+        </ul>
+        
+        <p><strong>💡 Tip Pro:</strong> Agita bien antes de cada uso ya que es un producto natural que puede separarse. Esto es completamente normal y no afecta la calidad.</p>
+      `;
+    }
+    // Standard microdosis storage
+    else {
+      storageText = `
+        <p><strong>🏠 Almacenamiento Ideal:</strong></p>
+        <ul>
+          <li>🌡️ Guardar en lugar fresco y seco (15-25°C)</li>
+          <li>🌙 Alejado de luz solar directa y humedad</li>
+          <li>🔒 Mantener el frasco bien cerrado</li>
+          <li>🚫 No refrigerar - puede causar condensación</li>
+          <li>👶 Mantener fuera del alcance de niños</li>
+        </ul>
+        
+        <p><strong>⏰ Vida Útil y Potencia:</strong></p>
+        <ul>
+          <li>📦 <strong>Sin Abrir:</strong> 2 años desde fabricación</li>
+          <li>🔓 <strong>Después de Abrir:</strong> 12 meses para máxima potencia</li>
+          <li>💊 Las cápsulas mantienen mejor la potencia que polvos sueltos</li>
+          <li>📅 Anotar fecha de apertura en el frasco</li>
+        </ul>
+        
+        <p><strong>✅ Señales de Buena Conservación:</strong></p>
+        <ul>
+          <li>✓ Cápsulas intactas y sin deformaciones</li>
+          <li>✓ Color uniforme del contenido</li>
+          <li>✓ Sin olor fuerte o rancio</li>
+          <li>✓ Frasco seco por dentro (sin humedad)</li>
+        </ul>
+        
+        <p><strong>⚠️ No Consumir Si:</strong></p>
+        <ul>
+          <li>✗ Las cápsulas están pegajosas o deformadas</li>
+          <li>✗ Hay cambio de color significativo</li>
+          <li>✗ Presencia de moho o humedad en el frasco</li>
+          <li>✗ Olor desagradable al abrir</li>
+        </ul>
+        
+        <p><strong>🧳 Para Viajes:</strong></p>
+        <ul>
+          <li>✈️ Llevar en el envase original con etiqueta</li>
+          <li>🎒 Usar pastillero solo para dosis de 1-2 días</li>
+          <li>🌡️ Evitar dejar en auto bajo sol directo</li>
+        </ul>
+        
+        <p><strong>💡 Tip Pro:</strong> Incluye un paquete de sílica gel en el frasco para absorber humedad y mantener las cápsulas en perfectas condiciones por más tiempo.</p>
+      `;
+    }
   }
   // Combos
   else if (currentProduct.id.includes('combo')) {
