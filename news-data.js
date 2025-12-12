@@ -1,14 +1,14 @@
 // News Articles Data
 const newsArticles = [
-    {
-        id: 'melena-leon-memoria',
-        icon: '🧠',
-        title: 'Melena de León Mejora la Memoria y Concentración',
-        category: 'Neurociencia',
-        tags: ['Neurociencia', 'Estudios 2024'],
-        date: '2024-01-15',
-        shortDescription: 'Estudios recientes de 2024 demuestran que la Melena de León estimula la producción de NGF (Factor de Crecimiento Nervioso), mejorando significativamente la función cognitiva, memoria y enfoque.',
-        fullContent: `
+  {
+    id: 'melena-leon-memoria',
+    icon: '🧠',
+    title: 'Melena de León Mejora la Memoria y Concentración',
+    category: 'Neurociencia',
+    tags: ['Neurociencia', 'Estudios 2024'],
+    date: '2024-01-15',
+    shortDescription: 'Estudios recientes de 2024 demuestran que la Melena de León estimula la producción de NGF (Factor de Crecimiento Nervioso), mejorando significativamente la función cognitiva, memoria y enfoque.',
+    fullContent: `
       <h3>🧠 El Hongo que Potencia tu Cerebro</h3>
       <p>La Melena de León (Hericium erinaceus) está revolucionando el campo de la neurociencia con sus extraordinarios beneficios para la salud cerebral. Investigaciones recientes de 2024 han confirmado lo que las medicinas tradicionales asiáticas conocían desde hace siglos: este hongo es un poderoso aliado para la función cognitiva.</p>
 
@@ -77,17 +77,17 @@ const newsArticles = [
         <li>Estimulación mental continua</li>
       </ul>
     `,
-        relatedProducts: ['extract-lions-mane', 'microdose-lions-mane', 'combo-wellness']
-    },
-    {
-        id: 'cordyceps-energia',
-        icon: '⚡',
-        title: 'Cordyceps Aumenta Energía y Rendimiento Físico',
-        category: 'Rendimiento Deportivo',
-        tags: ['Rendimiento Deportivo', 'Energía Natural'],
-        date: '2024-02-10',
-        shortDescription: 'Un estudio de 2024 encontró que Cordyceps incrementa la producción de ATP, mejorando la utilización de oxígeno durante el ejercicio.',
-        fullContent: `
+    relatedProducts: ['lions-mane', 'microdose-lions-mane', 'combo-wellness']
+  },
+  {
+    id: 'cordyceps-energia',
+    icon: '⚡',
+    title: 'Cordyceps Aumenta Energía y Rendimiento Físico',
+    category: 'Rendimiento Deportivo',
+    tags: ['Rendimiento Deportivo', 'Energía Natural'],
+    date: '2024-02-10',
+    shortDescription: 'Un estudio de 2024 encontró que Cordyceps incrementa la producción de ATP, mejorando la utilización de oxígeno durante el ejercicio.',
+    fullContent: `
       <h3>⚡ El Hongo de los Atletas</h3>
       <p>El Cordyceps (Cordyceps militaris) es conocido como "el hongo de los atletas" por sus extraordinarios efectos en la energía, resistencia y recuperación física. Utilizado tradicionalmente por atletas olímpicos chinos, ahora la ciencia moderna confirma sus increíbles beneficios.</p>
 
@@ -166,17 +166,17 @@ const newsArticles = [
         <li>✓ Cualquiera que busque más energía natural</li>
       </ul>
     `,
-        relatedProducts: ['extract-cordyceps', 'microdose-cordyceps', 'combo-energy']
-    },
-    {
-        id: 'cola-pavo-inmunidad',
-        icon: '🛡️',
-        title: 'Cola de Pavo Fortalece el Sistema Inmunológico',
-        category: 'Inmunología',
-        tags: ['Inmunología', 'Investigación Clínica'],
-        date: '2024-03-05',
-        shortDescription: 'Contiene compuestos PSP y PSK que estimulan la actividad de células inmunes. Aprobado como tratamiento coadyuvante de cáncer en Japón.',
-        fullContent: `
+    relatedProducts: ['cordyceps', 'microdose-cordyceps', 'combo-energy']
+  },
+  {
+    id: 'cola-pavo-inmunidad',
+    icon: '🛡️',
+    title: 'Cola de Pavo Fortalece el Sistema Inmunológico',
+    category: 'Inmunología',
+    tags: ['Inmunología', 'Investigación Clínica'],
+    date: '2024-03-05',
+    shortDescription: 'Contiene compuestos PSP y PSK que estimulan la actividad de células inmunes. Aprobado como tratamiento coadyuvante de cáncer en Japón.',
+    fullContent: `
       <h3>🛡️ El Guardián de tu Sistema Inmune</h3>
       <p>La Cola de Pavo (Trametes versicolor) es uno de los hongos medicinales más investigados del mundo, con más de 400 estudios científicos que respaldan sus extraordinarios beneficios para el sistema inmunológico. Su uso está oficialmente aprobado en Japón y China como tratamiento complementario en oncología.</p>
 
@@ -269,17 +269,17 @@ const newsArticles = [
       <h3>⚠️ Nota Importante</h3>
       <p>Si estás bajo tratamiento médico, especialmente inmunosupresores o quimioterapia, consulta con tu oncólogo antes de usar Cola de Pavo. En Japón y China, se prescribe bajo supervisión médica como parte del protocolo de tratamiento.</p>
     `,
-        relatedProducts: ['extract-turkey-tail', 'microdose-turkey-tail', 'combo-immunity']
-    },
-    {
-        id: 'reduccion-estres',
-        icon: '😌',
-        title: 'Hongos Medicinales Reducen Estrés y Ansiedad',
-        category: 'Salud Mental',
-        tags: ['Salud Mental', 'Adaptógenos'],
-        date: '2024-01-20',
-        shortDescription: 'La Melena de León exhibe propiedades antidepresivas y ansiolíticas al combatir el estrés oxidativo. Sus propiedades adaptogénicas ayudan al cuerpo a manejar el estrés.',
-        fullContent: `
+    relatedProducts: ['turkey-tail', 'microdose-turkey-tail', 'combo-immunity']
+  },
+  {
+    id: 'reduccion-estres',
+    icon: '😌',
+    title: 'Hongos Medicinales Reducen Estrés y Ansiedad',
+    category: 'Salud Mental',
+    tags: ['Salud Mental', 'Adaptógenos'],
+    date: '2024-01-20',
+    shortDescription: 'La Melena de León exhibe propiedades antidepresivas y ansiolíticas al combatir el estrés oxidativo. Sus propiedades adaptogénicas ayudan al cuerpo a manejar el estrés.',
+    fullContent: `
       <h3>😌 Calma Natural para la Mente Moderna</h3>
       <p>En un mundo cada vez más estresante, los hongos medicinales ofrecen una solución natural y efectiva para manejar el estrés, la ansiedad y mejorar el bienestar emocional. Sin los efectos secundarios de medicamentos sintéticos, estos hongos trabajan con tu cuerpo para restaurar el equilibrio mental.</p>
 
@@ -401,17 +401,17 @@ const newsArticles = [
         <li>Tiempo en naturaleza</li>
       </ul>
     `,
-        relatedProducts: ['extract-lions-mane', 'extract-reishi', 'microdose-lions-mane', 'combo-wellness']
-    },
-    {
-        id: 'salud-digestiva',
-        icon: '🌱',
-        title: 'Mejoran la Salud Digestiva Naturalmente',
-        category: 'Microbioma',
-        tags: ['Microbioma', 'Salud Digestiva'],
-        date: '2024-02-15',
-        shortDescription: 'Los hongos promueven el crecimiento de bacterias intestinales beneficiosas con efectos prebióticos. Cola de Pavo y Melena de León ayudan a mantener un microbioma intestinal equilibrado.',
-        fullContent: `
+    relatedProducts: ['lions-mane', 'reishi', 'microdose-lions-mane', 'combo-wellness']
+  },
+  {
+    id: 'salud-digestiva',
+    icon: '🌱',
+    title: 'Mejoran la Salud Digestiva Naturalmente',
+    category: 'Microbioma',
+    tags: ['Microbioma', 'Salud Digestiva'],
+    date: '2024-02-15',
+    shortDescription: 'Los hongos promueven el crecimiento de bacterias intestinales beneficiosas con efectos prebióticos. Cola de Pavo y Melena de León ayudan a mantener un microbioma intestinal equilibrado.',
+    fullContent: `
       <h3>🌱 El Intestino: Tu Segundo Cerebro</h3>
       <p>El sistema digestivo alberga el 70% de tu sistema inmune y produce el 90% de la serotonina (hormona de la felicidad). Los hongos medicinales son aliados poderosos para mantener un intestino saludable y un microbioma equilibrado.</p>
 
@@ -544,17 +544,17 @@ const newsArticles = [
         <li>Manejo del estrés (afecta directamente el intestino)</li>
       </ul>
     `,
-        relatedProducts: ['extract-turkey-tail', 'extract-lions-mane', 'microdose-turkey-tail', 'combo-immunity']
-    },
-    {
-        id: 'antioxidantes-antienvejecimiento',
-        icon: '✨',
-        title: 'Poderosos Antioxidantes y Propiedades Anti-Envejecimiento',
-        category: 'Antioxidantes',
-        tags: ['Antioxidantes', 'Anti-Envejecimiento'],
-        date: '2024-03-01',
-        shortDescription: 'Los hongos medicinales contienen altos niveles de antioxidantes como ergotioneína y selenio, que combaten el daño celular causado por radicales libres.',
-        fullContent: `
+    relatedProducts: ['turkey-tail', 'lions-mane', 'microdose-turkey-tail', 'combo-immunity']
+  },
+  {
+    id: 'antioxidantes-antienvejecimiento',
+    icon: '✨',
+    title: 'Poderosos Antioxidantes y Propiedades Anti-Envejecimiento',
+    category: 'Antioxidantes',
+    tags: ['Antioxidantes', 'Anti-Envejecimiento'],
+    date: '2024-03-01',
+    shortDescription: 'Los hongos medicinales contienen altos niveles de antioxidantes como ergotioneína y selenio, que combaten el daño celular causado por radicales libres.',
+    fullContent: `
       <h3>✨ La Fuente de la Juventud Natural</h3>
       <p>El envejecimiento es inevitable, pero el envejecimiento prematuro no lo es. Los hongos medicinales contienen algunos de los antioxidantes más potentes de la naturaleza, capaces de proteger tus células, ralentizar el envejecimiento y promover longevidad saludable.</p>
 
@@ -747,6 +747,6 @@ const newsArticles = [
         <li>Envejecimiento más lento y saludable</li>
       </ul>
     `,
-        relatedProducts: ['extract-reishi', 'extract-lions-mane', 'extract-turkey-tail', 'extract-cordyceps']
-    }
+    relatedProducts: ['reishi', 'lions-mane', 'turkey-tail', 'cordyceps']
+  }
 ];

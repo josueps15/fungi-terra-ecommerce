@@ -233,6 +233,7 @@ function goToProductDetail(productId) {
 
 // Navigate to news detail page
 function goToNewsDetail(articleId) {
+  console.log('Navigating to news detail:', articleId);
   window.location.href = `news-detail.html?id=${articleId}`;
 }
 
@@ -655,3 +656,5 @@ if (mobileMenuToggle && navMenu) {
     }
   });
 }
+
+window.products = products;
