@@ -1,180 +1,7 @@
-// Product Data
-const products = {
-  freshMushrooms: [
-    {
-      id: 'oyster-white',
-      name: 'Hongo Ostra Blanco',
-      category: 'Hongos Frescos',
-      description: 'Hongos ostra blancos frescos, perfectos para saltear, sopas y guisos. Textura suave y sabor delicado.',
-      price: 3.00,
-      image: 'oyster_white_mushroom_1763764129658.png',
-      unit: 'por 250g'
-    },
-    {
-      id: 'oyster-gray',
-      name: 'Hongo Ostra Gris',
-      category: 'Hongos Frescos',
-      description: 'Hongos ostra grises frescos con sabor intenso. Ideales para platillos gourmet y recetas asiáticas.',
-      price: 3.00,
-      image: 'oyster_gray_mushroom_1763764144529.png',
-      unit: 'por 250g'
-    },
-    {
-      id: 'oyster-pink',
-      name: 'Hongo Ostra Rosado',
-      category: 'Hongos Frescos',
-      description: 'Hongos ostra rosados frescos, variedad exótica con hermoso color. Sabor suave y textura firme.',
-      price: 3.00,
-      image: 'oyster_pink_mushroom_1763764160547.png',
-      unit: 'por 250g'
-    },
-    {
-      id: 'oyster-mix',
-      name: 'Mix de Hongos Ostra',
-      category: 'Hongos Frescos',
-      description: '¡Variedad completa! Mix de hongos ostra blanco, gris y rosado. Perfectos para experimentar con diferentes sabores y texturas en tus platillos.',
-      price: 3.00,
-      image: 'oyster_white_mushroom_1763764129658.png',
-      unit: 'por 250g'
-    },
-    {
-      id: 'oyster-king',
-      name: 'Hongo Ostra Rey',
-      category: 'Hongos Frescos',
-      description: 'Hongo Ostra Rey (King Oyster), variedad premium de gran tamaño. Textura carnosa y sabor umami intenso, perfecto para asar o saltear.',
-      price: 3.00,
-      image: 'oyster_white_mushroom_1763764129658.png',
-      unit: 'por 250g'
-    }
-  ],
-  extracts: [
-    {
-      id: 'turkey-tail',
-      name: 'Extracto de Cola de Pavo',
-      category: 'Extractos Medicinales',
-      description: 'Extracto concentrado de Trametes versicolor. Apoya el sistema inmunológico y la salud digestiva.',
-      price: 15.00,
-      image: 'turkey_tail_extract_1763764175903.png',
-      unit: 'frasco 30ml'
-    },
-    {
-      id: 'lions-mane',
-      name: 'Extracto de Melena de León',
-      category: 'Extractos Medicinales',
-      description: 'Extracto de Hericium erinaceus. Promueve la salud cognitiva, memoria y concentración.',
-      price: 20.00,
-      image: 'lions_mane_extract_1763764190974.png',
-      unit: 'frasco 30ml'
-    },
-    {
-      id: 'cordyceps',
-      name: 'Extracto de Cordyceps',
-      category: 'Extractos Medicinales',
-      description: 'Extracto de Cordyceps militaris. Aumenta energía, resistencia y vitalidad natural.',
-      price: 15.00,
-      image: 'cordyceps_extract_1763764205645.png',
-      unit: 'frasco 30ml'
-    },
-    {
-      id: 'reishi',
-      name: 'Extracto de Ganoderma (Reishi)',
-      category: 'Extractos Medicinales',
-      description: 'Extracto de Ganoderma lucidum (Reishi). Reduce el estrés, mejora el sueño y fortalece el sistema inmunológico.',
-      price: 15.00,
-      image: 'turkey_tail_extract_1763764175903.png',
-      unit: 'frasco 30ml'
-    }
-  ],
-  specialProducts: [
-    {
-      id: 'microdose-lions-mane',
-      name: 'Microdosis Melena de León',
-      category: 'Productos Especiales',
-      description: 'Cápsulas de microdosis de melena de león. Mejora el enfoque y la claridad mental diariamente.',
-      price: 15.00,
-      image: 'microdose_capsules_1763764221475.png',
-      unit: '30 cápsulas'
-    },
-    {
-      id: 'microdose-cordyceps',
-      name: 'Microdosis Cordyceps',
-      category: 'Productos Especiales',
-      description: 'Cápsulas de microdosis de cordyceps. Aumenta tu energía y rendimiento físico de forma natural.',
-      price: 15.00,
-      image: 'microdose_capsules_1763764221475.png',
-      unit: '30 cápsulas'
-    },
-    {
-      id: 'microdose-turkey-tail',
-      name: 'Microdosis Cola de Pavo',
-      category: 'Productos Especiales',
-      description: 'Cápsulas de microdosis de cola de pavo. Fortalece el sistema inmunológico y apoya la salud digestiva.',
-      price: 15.00,
-      image: 'microdose_capsules_1763764221475.png',
-      unit: '30 cápsulas'
-    },
-    {
-      id: 'microdose-reishi',
-      name: 'Microdosis Ganoderma (Reishi)',
-      category: 'Productos Especiales',
-      description: 'Cápsulas de microdosis de ganoderma (reishi). Reduce el estrés, mejora el sueño y fortalece la inmunidad.',
-      price: 15.00,
-      image: 'microdose_capsules_1763764221475.png',
-      unit: '30 cápsulas'
-    },
-    {
-      id: 'sandy-milk',
-      name: 'Leche de Sandy',
-      category: 'Productos Especiales',
-      description: 'Medicina natural de la Amazonía ecuatoriana. Ideal para tratar gastritis, reflujo ácido y eliminar Helicobacter pylori. Rico en vitaminas y minerales para la salud digestiva.',
-      price: 10.00,
-      image: 'oyster_white_mushroom_1763764129658.png',
-      unit: 'botella 300ml'
-    }
-  ],
-  combos: [
-    {
-      id: 'combo-wellness',
-      name: '🌟 Combo Bienestar Total',
-      category: 'Combos y Promociones',
-      description: '¡OFERTA ESPECIAL! Hongo Ostra (cualquier variedad) + Extracto de Melena de León + Microdosis Melena de León. Todo lo que necesitas para potenciar tu salud mental y física.',
-      price: 35.00,
-      image: 'lions_mane_extract_1763764190974.png',
-      unit: 'combo completo',
-      includes: ['1 Hongo Ostra (250g)', '1 Extracto Melena de León (30ml)', '1 Microdosis Melena de León (30 cáps)']
-    },
-    {
-      id: 'combo-energy',
-      name: '⚡ Combo Energía y Vitalidad',
-      category: 'Combos y Promociones',
-      description: '¡PROMOCIÓN! Hongo Ostra Gris + Extracto de Cordyceps + Microdosis Cordyceps. La combinación perfecta para aumentar tu energía y rendimiento diario.',
-      price: 30.00,
-      image: 'cordyceps_extract_1763764205645.png',
-      unit: 'combo completo',
-      includes: ['1 Hongo Ostra Gris (250g)', '1 Extracto Cordyceps (30ml)', '1 Microdosis Cordyceps (30 cáps)']
-    },
-    {
-      id: 'combo-immunity',
-      name: '🛡️ Combo Inmunidad Premium',
-      category: 'Combos y Promociones',
-      description: '¡SUPER OFERTA! Hongo Ostra Blanco + Extracto Cola de Pavo + Microdosis Melena de León. Fortalece tu sistema inmunológico con esta poderosa combinación.',
-      price: 30.00,
-      image: 'turkey_tail_extract_1763764175903.png',
-      unit: 'combo completo',
-      includes: ['1 Hongo Ostra Blanco (250g)', '1 Extracto Cola de Pavo (30ml)', '1 Microdosis Melena de León (30 cáps)']
-    },
-    {
-      id: 'combo-complete',
-      name: '💎 Combo Completo Deluxe',
-      category: 'Combos y Promociones',
-      description: '¡OFERTA EXCLUSIVA! 2 Hongos Ostra (variedades a elegir) + 2 Extractos (a elegir) + 2 Microdosis (a elegir). El paquete más completo para tu bienestar integral.',
-      price: 60.00,
-      image: 'oyster_white_mushroom_1763764129658.png',
-      unit: 'combo deluxe',
-      includes: ['2 Hongos Ostra (500g total)', '2 Extractos (60ml total)', '2 Microdosis (60 cáps total)']
-    }
-  ]
-};
+// Product Data - now loaded from Firebase
+// Products are loaded dynamically from firebase-products.js
+// The `products` variable is defined there and populated from Firestore
+
 
 // Shopping Cart
 let cart = [];
@@ -183,7 +10,11 @@ let cart = [];
 const WHATSAPP_NUMBER = '593960945828'; // Ecuador: +593 960945828
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load products from Firebase first
+  await loadProductsFromFirebase();
+
+  // Then initialize the page
   loadProducts();
   loadCart();
   initializeEventListeners();
