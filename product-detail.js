@@ -741,6 +741,14 @@ function buyWhatsAppFromDetail() {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-  loadProductDetail();
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    // Ensure products are loaded before showing details
+    if (typeof loadProductsFromFirebase === 'function') {
+      await loadProductsFromFirebase();
+    }
+    loadProductDetail();
+  } catch (error) {
+    console.error("Error initializing product detail:", error);
+  }
 });

@@ -74,7 +74,7 @@ function loadArticleDetail() {
 }
 
 // Load related products
-function loadRelatedProducts() {
+async function loadRelatedProducts() {
     console.log('Starting loadRelatedProducts...');
     const relatedProductsSection = document.getElementById('relatedProductsSection');
     const relatedProductsGrid = document.getElementById('relatedProductsGrid');
@@ -101,9 +101,10 @@ function loadRelatedProducts() {
             return;
         }
 
-        // Verificar si 'products' existe
+        // Verificar si 'products' existe (aunque ya debería estar cargado)
         if (typeof products === 'undefined') {
-            throw new Error("La variable 'products' no está definida. Revisa si script.js se cargó correctamente.");
+            console.warn("Products variable undefined after await, trying to reload...");
+            await loadProductsFromFirebase();
         }
 
         console.log('Products variable found:', products);
@@ -239,6 +240,14 @@ function setupShareButtons() {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    loadArticleDetail();
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Ensure products are loaded before showing details
+        if (typeof loadProductsFromFirebase === 'function') {
+            await loadProductsFromFirebase();
+        }
+        loadArticleDetail();
+    } catch (error) {
+        console.error("Error initializing news detail:", error);
+    }
 });
