@@ -11,3 +11,5 @@ dist/
 *.log
 *.tmp
 index.html.corrupted_173mb
+
+*.code-workspace
