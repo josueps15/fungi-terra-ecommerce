@@ -408,71 +408,63 @@ function initializeEventListeners() {
 
         if (currentScroll > 100) {
           header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-        } else {
-          header.style.boxShadow = 'none';
-        }
+          rootMargin: '0px 0px -50px 0px'
+        };
 
-        lastScroll = currentScroll;
-      });
-  }
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              // Optional: Stop observing once visible to save performance
+              // observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
 
-  // Scroll Effects
-  function initializeScrollEffects() {
-    const observerOptions = {
-      threshold: 0.15, // Trigger when 15% of the element is visible
-      rootMargin: '0px 0px -50px 0px'
-    };
+        // Elements to animate
+        const animatedElements = document.querySelectorAll('.section-title, .section-subtitle, .product-card, .news-card, .hero-text, .hero-image');
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          // Optional: Stop observing once visible to save performance
-          // observer.unobserve(entry.target);
-        }
-      });
-    }, observerOptions);
-
-    // Elements to animate
-    const animatedElements = document.querySelectorAll('.section-title, .section-subtitle, .product-card, .news-card, .hero-text, .hero-image');
-
-    animatedElements.forEach((el, index) => {
-      el.classList.add('reveal-on-scroll');
-      // Add staggered delay for grid items
-      if (el.classList.contains('product-card') || el.classList.contains('news-card')) {
-        // Reset transition delay based on index in grid (modulo 3 for rows of 3)
-        // This is a simple approximation, for better results we'd need to know the row index
-        el.style.transitionDelay = `${(index % 3) * 100}ms`;
+        animatedElements.forEach((el, index) => {
+          el.classList.add('reveal-on-scroll');
+          // Add staggered delay for grid items
+          if (el.classList.contains('product-card') || el.classList.contains('news-card')) {
+            // Reset transition delay based on index in grid (modulo 3 for rows of 3)
+            // This is a simple approximation, for better results we'd need to know the row index
+            el.style.transitionDelay = `${(index % 3) * 100}ms`;
+          }
+          observer.observe(el);
+        });
       }
-      observer.observe(el);
-    });
-  }
 
-  // Mobile Menu Toggle
-  const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-  const navMenu = document.querySelector('.nav-menu');
+      // Mobile Menu Toggle
+      const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+      const navMenu = document.querySelector('.nav-menu');
 
-  if (mobileMenuToggle && navMenu) {
-    mobileMenuToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-      mobileMenuToggle.classList.toggle('active');
-    });
+      if (mobileMenuToggle && navMenu) {
+        mobileMenuToggle.addEventListener('click', () => {
+          navMenu.classList.toggle('active');
+          mobileMenuToggle.classList.toggle('active');
+        });
 
-    // Close menu when clicking on a link
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        mobileMenuToggle.classList.remove('active');
-      });
-    });
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+          });
+        });
 
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-        navMenu.classList.remove('active');
-        mobileMenuToggle.classList.remove('active');
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            navMenu.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+          }
+        });
       }
-    });
-  }
 
-  window.products = products;
+      window.products = products;
+      window.goToProductDetail = goToProductDetail;
+      window.addToCart = addToCart;
+      window.buyWhatsApp = buyWhatsApp;
+      window.goToNewsDetail = goToNewsDetail;

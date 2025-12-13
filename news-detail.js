@@ -148,6 +148,7 @@ async function loadRelatedProducts() {
 
                 const findByName = (list, name) => {
                     if (!list) return null;
+                    console.log(`Searching for "${name}" in list:`, list.map(p => p.name));
                     return list.find(p => p.name.includes(name));
                 };
 
