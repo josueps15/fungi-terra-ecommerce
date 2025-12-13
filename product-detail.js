@@ -18,12 +18,37 @@ function loadProductDetail() {
     return;
   }
 
-  currentProduct = findProduct(productId);
+  // Hide skeleton and show content when data is ready
+  const onDataReady = (product) => {
+    currentProduct = product;
 
-  if (!currentProduct) {
-    window.location.href = 'index.html';
-    return;
+    // Remove skeleton
+    const skeleton = document.getElementById('detailSkeleton');
+    if (skeleton) skeleton.style.display = 'none';
+
+    // Show real content
+    document.querySelector('.product-detail-grid').style.display = 'grid';
+    document.querySelector('.product-tabs').style.display = 'block';
+
+    updateProductUI();
+  };
+
+  // If products are already loaded
+  if (window.products && window.products.freshMushrooms.length > 0) {
+    const product = findProduct(productId);
+    if (product) {
+      onDataReady(product);
+      return;
+    }
   }
+
+  // If not loaded, wait for them (this handles the direct link case)
+  // The skeleton is already shown by default
+  // We just need to wait for loadProductsFromFirebase to finish (called in DOMContentLoaded)
+}
+
+function updateProductUI() {
+  if (!currentProduct) return;
 
   // Update page title
   document.title = `${currentProduct.name} - FUNGI TERRA`;
@@ -741,12 +766,54 @@ function buyWhatsAppFromDetail() {
 }
 
 // Initialize on page load
+// Render Detail Skeleton
+function renderDetailSkeleton() {
+  const container = document.querySelector('.product-detail-container');
+  const existingGrid = document.querySelector('.product-detail-grid');
+  const existingTabs = document.querySelector('.product-tabs');
+
+  if (!container || !existingGrid) return;
+
+  // Hide real content initially
+  existingGrid.style.display = 'none';
+  existingTabs.style.display = 'none';
+
+  // Create skeleton
+  const skeleton = document.createElement('div');
+  skeleton.id = 'detailSkeleton';
+  skeleton.className = 'product-detail-skeleton';
+  skeleton.innerHTML = `
+    <div class="skeleton skeleton-detail-image"></div>
+    <div class="skeleton-detail-info">
+      <div class="skeleton skeleton-category"></div>
+      <div class="skeleton skeleton-title-large"></div>
+      <div class="skeleton skeleton-price-large"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton-actions">
+        <div class="skeleton skeleton-btn"></div>
+        <div class="skeleton skeleton-btn"></div>
+      </div>
+    </div>
+  `;
+
+  // Insert before the grid
+  container.insertBefore(skeleton, existingGrid);
+}
+
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', async () => {
   try {
+    // Show skeleton immediately
+    renderDetailSkeleton();
+
     // Ensure products are loaded before showing details
     if (typeof loadProductsFromFirebase === 'function') {
       await loadProductsFromFirebase();
     }
+
+    // Now load the detail (which will hide skeleton)
     loadProductDetail();
   } catch (error) {
     console.error("Error initializing product detail:", error);

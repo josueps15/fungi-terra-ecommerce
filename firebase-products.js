@@ -2,6 +2,7 @@
 let products = {
     freshMushrooms: [],
     extracts: [],
+    microdosis: [],
     specialProducts: [],
     combos: []
 };
@@ -31,6 +32,7 @@ async function loadProductsFromFirebase() {
             products = {
                 freshMushrooms: [],
                 extracts: [],
+                microdosis: [],
                 specialProducts: [],
                 combos: []
             };
@@ -55,7 +57,9 @@ async function loadProductsFromFirebase() {
                     products.freshMushrooms.push(product);
                 } else if (data.category === 'extractos') {
                     products.extracts.push(product);
-                } else if (data.category === 'microdosis' || data.category === 'especiales') {
+                } else if (data.category === 'microdosis') {
+                    products.microdosis.push(product);
+                } else if (data.category === 'especiales') {
                     products.specialProducts.push(product);
                 }
             });
@@ -104,6 +108,7 @@ async function loadProductsFromFirebase() {
         console.log(`✅ Loaded products from Firebase`);
         console.log(`   - Hongos Frescos: ${products.freshMushrooms.length}`);
         console.log(`   - Extractos: ${products.extracts.length}`);
+        console.log(`   - Microdosis: ${products.microdosis.length}`);
         console.log(`   - Productos Especiales: ${products.specialProducts.length}`);
         console.log(`   - Combos: ${products.combos.length}`);
 
@@ -121,6 +126,7 @@ function findProduct(productId) {
     const allProducts = [
         ...products.freshMushrooms,
         ...products.extracts,
+        ...products.microdosis,
         ...products.specialProducts,
         ...products.combos
     ];

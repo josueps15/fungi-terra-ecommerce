@@ -11,6 +11,9 @@ const WHATSAPP_NUMBER = '593960945828'; // Ecuador: +593 960945828
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
+  // Show skeletons immediately
+  showAllSkeletons();
+
   // Load products from Firebase first
   await loadProductsFromFirebase();
 
@@ -27,8 +30,40 @@ document.addEventListener('DOMContentLoaded', async () => {
 function loadProducts() {
   renderProducts('freshMushroomsGrid', products.freshMushrooms);
   renderProducts('extractsGrid', products.extracts);
+  renderProducts('microdosisGrid', products.microdosis);
   renderProducts('specialProductsGrid', products.specialProducts);
   renderCombos('combosGrid', products.combos);
+}
+
+function showAllSkeletons() {
+  renderSkeletons('freshMushroomsGrid', 3);
+  renderSkeletons('extractsGrid', 3);
+  renderSkeletons('microdosisGrid', 3);
+  renderSkeletons('specialProductsGrid', 3);
+  renderSkeletons('combosGrid', 3);
+}
+
+// Render Skeleton Loaders (Magic UI Style)
+function renderSkeletons(gridId, count) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+
+  grid.innerHTML = Array(count).fill(0).map(() => `
+    <div class="product-card-skeleton">
+      <div class="skeleton skeleton-image"></div>
+      <div class="skeleton-content">
+        <div class="skeleton skeleton-category"></div>
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text-short"></div>
+        <div class="skeleton skeleton-price"></div>
+        <div class="skeleton-actions">
+          <div class="skeleton skeleton-btn"></div>
+          <div class="skeleton skeleton-btn"></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
 // Render Products
@@ -111,6 +146,7 @@ function findProduct(productId) {
   const allProducts = [
     ...products.freshMushrooms,
     ...products.extracts,
+    ...products.microdosis,
     ...products.specialProducts,
     ...products.combos
   ];
