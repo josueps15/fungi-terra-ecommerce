@@ -112,49 +112,57 @@ async function loadRelatedProducts() {
         // Find related products from the products object
         const relatedProductsList = [];
 
+        // Map symbolic IDs to partial names for fallback search
+        const idToNameMap = {
+            'lions-mane': 'Extracto Melena de León',
+            'microdose-lions-mane': 'Microdosis Melena de León',
+            'cordyceps': 'Extracto Cordiceps', // Note spelling in seed.mjs
+            'microdose-cordyceps': 'Microdosis Cordiceps',
+            'turkey-tail': 'Extracto Cola de Pavo',
+            'microdose-turkey-tail': 'Microdosis Cola de Pavo',
+            'reishi': 'Extracto Ganoderma',
+            'microdose-reishi': 'Microdosis Ganoderma'
+        };
+
         currentArticle.relatedProducts.forEach(productId => {
             console.log(`Searching for product ID: ${productId}`);
             // Search in all product categories
             let product = null;
 
-            // Search in fresh mushrooms
-            if (products.freshMushrooms) {
-                const found = products.freshMushrooms.find(p => p.id === productId);
-                if (found) {
-                    console.log(`Found in freshMushrooms: ${productId}`);
-                    product = found;
-                }
-            }
+            // Helper to search in a category
+            const findInList = (list, id) => {
+                if (!list) return null;
+                return list.find(p => p.id === id);
+            };
 
-            // Search in extracts
-            if (!product && products.extracts) {
-                const found = products.extracts.find(p => p.id === productId);
-                if (found) {
-                    console.log(`Found in extracts: ${productId}`);
-                    product = found;
-                }
-            }
+            // 1. Try exact ID match
+            product = findInList(products.freshMushrooms, productId) ||
+                findInList(products.extracts, productId) ||
+                findInList(products.specialProducts, productId) ||
+                findInList(products.combos, productId);
 
-            // Search in special products
-            if (!product && products.specialProducts) {
-                const found = products.specialProducts.find(p => p.id === productId);
-                if (found) {
-                    console.log(`Found in specialProducts: ${productId}`);
-                    product = found;
-                }
-            }
+            // 2. Fallback: Try name match if mapped
+            if (!product && idToNameMap[productId]) {
+                const targetName = idToNameMap[productId];
+                console.log(`ID not found, trying name match for: ${targetName}`);
 
-            // Search in combos
-            if (!product && products.combos) {
-                const found = products.combos.find(p => p.id === productId);
-                if (found) {
-                    console.log(`Found in combos: ${productId}`);
-                    product = found;
-                }
+                const findByName = (list, name) => {
+                    if (!list) return null;
+                    return list.find(p => p.name.includes(name));
+                };
+
+                product = findByName(products.freshMushrooms, targetName) ||
+                    findByName(products.extracts, targetName) ||
+                    findByName(products.specialProducts, targetName) ||
+                    findByName(products.combos, targetName);
             }
 
             if (product) {
-                relatedProductsList.push(product);
+                console.log(`Found product: ${product.name}`);
+                // Avoid duplicates
+                if (!relatedProductsList.some(p => p.id === product.id)) {
+                    relatedProductsList.push(product);
+                }
             } else {
                 console.warn(`Product ID not found in any category: ${productId}`);
             }

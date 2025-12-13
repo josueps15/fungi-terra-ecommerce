@@ -53,61 +53,59 @@ async function loadProductsFromFirebase() {
             }
         });
 
-        // Add combos manually (these are not in inventory)
-        products.combos = [
-            {
-                id: 'combo-wellness',
-                name: '🌟 Combo Bienestar Total',
-                category: 'Combos y Promociones',
-                description: '¡OFERTA ESPECIAL! Hongo Ostra (cualquier variedad) + Extracto de Melena de León + Microdosis Melena de León.',
-                price: 35.00,
-                image: 'lions_mane_extract_1763764190974.png',
-                unit: 'combo completo',
-                includes: ['1 Hongo Ostra (250g)', '1 Extracto Melena de León (30ml)', '1 Microdosis Melena de León (30 cáps)']
-            },
-            {
-                id: 'combo-energy',
-                name: '⚡ Combo Energía y Vitalidad',
-                category: 'Combos y Promociones',
-                description: '¡PROMOCIÓN! Hongo Ostra Gris + Extracto de Cordyceps + Microdosis Cordyceps.',
-                price: 30.00,
-                image: 'cordyceps_extract_1763764205645.png',
-                unit: 'combo completo',
-                includes: ['1 Hongo Ostra Gris (250g)', '1 Extracto Cordyceps (30ml)', '1 Microdosis Cordyceps (30 cáps)']
-            },
-            {
-                id: 'combo-immunity',
-                name: '🛡️ Combo Inmunidad Premium',
-                category: 'Combos y Promociones',
-                description: '¡SUPER OFERTA! Hongo Ostra Blanco + Extracto Cola de Pavo + Microdosis Melena de León.',
-                price: 30.00,
-                image: 'turkey_tail_extract_1763764175903.png',
-                unit: 'combo completo',
-                includes: ['1 Hongo Ostra Blanco (250g)', '1 Extracto Cola de Pavo (30ml)', '1 Microdosis Melena de León (30 cáps)']
-            }
-        ];
-
-        productsLoaded = true;
-        productsLoading = false;
-
         console.log(`✅ Loaded ${productsSnapshot.size} products from Firebase`);
-        console.log(`   - Hongos Frescos: ${products.freshMushrooms.length}`);
-        console.log(`   - Extractos: ${products.extracts.length}`);
-        console.log(`   - Productos Especiales: ${products.specialProducts.length}`);
-        console.log(`   - Combos: ${products.combos.length}`);
-
-        // Make products available globally
-        window.products = products;
-
-        return products;
 
     } catch (error) {
         console.error('❌ Error loading products from Firebase:', error);
-        productsLoading = false;
-
-        // Fallback to empty products
-        return products;
+        // Don't return here, continue to load combos
     }
+
+    // Add combos manually (these are not in inventory)
+    products.combos = [
+        {
+            id: 'combo-wellness',
+            name: '🌟 Combo Bienestar Total',
+            category: 'Combos y Promociones',
+            description: '¡OFERTA ESPECIAL! Hongo Ostra (cualquier variedad) + Extracto de Melena de León + Microdosis Melena de León.',
+            price: 35.00,
+            image: 'lions_mane_extract_1763764190974.png',
+            unit: 'combo completo',
+            includes: ['1 Hongo Ostra (250g)', '1 Extracto Melena de León (30ml)', '1 Microdosis Melena de León (30 cáps)']
+        },
+        {
+            id: 'combo-energy',
+            name: '⚡ Combo Energía y Vitalidad',
+            category: 'Combos y Promociones',
+            description: '¡PROMOCIÓN! Hongo Ostra Gris + Extracto de Cordyceps + Microdosis Cordyceps.',
+            price: 30.00,
+            image: 'cordyceps_extract_1763764205645.png',
+            unit: 'combo completo',
+            includes: ['1 Hongo Ostra Gris (250g)', '1 Extracto Cordyceps (30ml)', '1 Microdosis Cordyceps (30 cáps)']
+        },
+        {
+            id: 'combo-immunity',
+            name: '🛡️ Combo Inmunidad Premium',
+            category: 'Combos y Promociones',
+            description: '¡SUPER OFERTA! Hongo Ostra Blanco + Extracto Cola de Pavo + Microdosis Melena de León.',
+            price: 30.00,
+            image: 'turkey_tail_extract_1763764175903.png',
+            unit: 'combo completo',
+            includes: ['1 Hongo Ostra Blanco (250g)', '1 Extracto Cola de Pavo (30ml)', '1 Microdosis Melena de León (30 cáps)']
+        }
+    ];
+
+    productsLoaded = true;
+    productsLoading = false;
+
+    console.log(`   - Hongos Frescos: ${products.freshMushrooms.length}`);
+    console.log(`   - Extractos: ${products.extracts.length}`);
+    console.log(`   - Productos Especiales: ${products.specialProducts.length}`);
+    console.log(`   - Combos: ${products.combos.length}`);
+
+    // Make products available globally
+    window.products = products;
+
+    return products;
 }
 
 // Helper function to find product by ID
