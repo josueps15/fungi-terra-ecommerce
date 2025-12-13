@@ -370,122 +370,109 @@ function initializeEventListeners() {
 
   // Registration Form
   const registrationForm = document.getElementById('registrationForm');
-  registrationForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  if (registrationForm) {
+    registrationForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    const formData = new FormData(registrationForm);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const phone = formData.get('phone');
+      const formData = new FormData(registrationForm);
+      const name = formData.get('name');
+      const email = formData.get('email');
+      const phone = formData.get('phone');
 
-    // Deshabilitar botón mientras se procesa
-    const submitButton = registrationForm.querySelector('button[type="submit"]');
-    const originalText = submitButton.textContent;
-    submitButton.disabled = true;
-    submitButton.textContent = 'Registrando...';
+      // Deshabilitar botón mientras se procesa
+      const submitButton = registrationForm.querySelector('button[type="submit"]');
+      const originalText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = 'Registrando...';
 
-    try {
-      // Enviar datos al servidor
-      const response = await fetch('https://fungi-terra-ecommerce.onrender.com/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, phone })
+      try {
+        // Enviar datos al servidor
+        const response = await fetch('https://fungi-terra-ecommerce.onrender.com/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, phone })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showNotification('¡Gracias por registrarte! Revisa tu email para el mensaje de bienvenida.', 'success');
+          registrationForm.reset();
+        } else {
+          showNotification(data.message || 'Error al registrar. Intenta nuevamente.', 'error');
+        }
+      } catch (error) {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > 100) {
+          header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+        } else {
+          header.style.boxShadow = 'none';
+        }
+
+        lastScroll = currentScroll;
       });
+  }
 
-      const data = await response.json();
+  // Scroll Effects
+  function initializeScrollEffects() {
+    const observerOptions = {
+      threshold: 0.15, // Trigger when 15% of the element is visible
+      rootMargin: '0px 0px -50px 0px'
+    };
 
-      if (data.success) {
-        showNotification('¡Gracias por registrarte! Revisa tu email para el mensaje de bienvenida.', 'success');
-        registrationForm.reset();
-      } else {
-        showNotification(data.message || 'Error al registrar. Intenta nuevamente.', 'error');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          // Optional: Stop observing once visible to save performance
+          // observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Elements to animate
+    const animatedElements = document.querySelectorAll('.section-title, .section-subtitle, .product-card, .news-card, .hero-text, .hero-image');
+
+    animatedElements.forEach((el, index) => {
+      el.classList.add('reveal-on-scroll');
+      // Add staggered delay for grid items
+      if (el.classList.contains('product-card') || el.classList.contains('news-card')) {
+        // Reset transition delay based on index in grid (modulo 3 for rows of 3)
+        // This is a simple approximation, for better results we'd need to know the row index
+        el.style.transitionDelay = `${(index % 3) * 100}ms`;
       }
-    } catch (error) {
-      console.error('Error:', error);
-      showNotification('Error de conexión. Asegúrate de que el servidor esté ejecutándose.', 'error');
-    } finally {
-      // Rehabilitar botón
-      submitButton.disabled = false;
-      submitButton.textContent = originalText;
-    }
-  });
+      observer.observe(el);
+    });
+  }
 
-  // Header Scroll Effect
-  const header = document.querySelector('.header');
-  let lastScroll = 0;
+  // Mobile Menu Toggle
+  const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+  const navMenu = document.querySelector('.nav-menu');
 
-  window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
+  if (mobileMenuToggle && navMenu) {
+    mobileMenuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      mobileMenuToggle.classList.toggle('active');
+    });
 
-    if (currentScroll > 100) {
-      header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-    } else {
-      header.style.boxShadow = 'none';
-    }
+    // Close menu when clicking on a link
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        mobileMenuToggle.classList.remove('active');
+      });
+    });
 
-    lastScroll = currentScroll;
-  });
-}
-
-// Scroll Effects
-function initializeScrollEffects() {
-  const observerOptions = {
-    threshold: 0.15, // Trigger when 15% of the element is visible
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        // Optional: Stop observing once visible to save performance
-        // observer.unobserve(entry.target);
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+        navMenu.classList.remove('active');
+        mobileMenuToggle.classList.remove('active');
       }
     });
-  }, observerOptions);
+  }
 
-  // Elements to animate
-  const animatedElements = document.querySelectorAll('.section-title, .section-subtitle, .product-card, .news-card, .hero-text, .hero-image');
-
-  animatedElements.forEach((el, index) => {
-    el.classList.add('reveal-on-scroll');
-    // Add staggered delay for grid items
-    if (el.classList.contains('product-card') || el.classList.contains('news-card')) {
-      // Reset transition delay based on index in grid (modulo 3 for rows of 3)
-      // This is a simple approximation, for better results we'd need to know the row index
-      el.style.transitionDelay = `${(index % 3) * 100}ms`;
-    }
-    observer.observe(el);
-  });
-}
-
-// Mobile Menu Toggle
-const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-const navMenu = document.querySelector('.nav-menu');
-
-if (mobileMenuToggle && navMenu) {
-  mobileMenuToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    mobileMenuToggle.classList.toggle('active');
-  });
-
-  // Close menu when clicking on a link
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      navMenu.classList.remove('active');
-      mobileMenuToggle.classList.remove('active');
-    });
-  });
-
-  // Close menu when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-      navMenu.classList.remove('active');
-      mobileMenuToggle.classList.remove('active');
-    }
-  });
-}
-
-window.products = products;
+  window.products = products;
