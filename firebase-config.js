@@ -10,7 +10,12 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-console.log('✅ Firebase initialized successfully');
+if (typeof firebase === 'undefined') {
+    console.error('❌ Firebase SDK not loaded. Make sure firebase-app-compat.js is included before this script.');
+} else {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    window.db = firebase.firestore();
+    console.log('✅ Firebase initialized successfully');
+}

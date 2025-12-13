@@ -22,7 +22,10 @@ async function loadProductsFromFirebase() {
         console.log('🔄 Loading products from Firebase...');
 
         try {
-            const productsSnapshot = await db.collection('products').get();
+            if (!window.db) {
+                throw new Error('Firestore db not initialized');
+            }
+            const productsSnapshot = await window.db.collection('products').get();
 
             // Reset products
             products = {
