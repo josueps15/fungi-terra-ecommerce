@@ -59,6 +59,11 @@ function renderProducts(gridId, productList) {
 
 // Navigate to product detail page
 function goToProductDetail(productId) {
+  console.log('Navigating to product detail:', productId);
+  if (!productId) {
+    console.error('Error: productId is undefined');
+    return;
+  }
   window.location.href = `product-detail.html?id=${productId}`;
 }
 
