@@ -1,60 +1,174 @@
-// Product Detail Page JavaScript
+// Get product ID from URL
+const urlParams = new URLSearchParams(window.location.search);
+const productId = urlParams.get('id');
 
-let currentQuantity = 1;
 let currentProduct = null;
 
-// Get product ID from URL
-function getProductIdFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('id');
-}
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('🚀 Product Detail Script Loaded');
+  console.log('URL Search Params:', window.location.search);
+
+  if (productId) {
+    console.log('Product ID found:', productId);
+    loadProductDetails(productId);
+  } else {
+    console.error('No product ID in URL');
+    // Redirect to home if no product ID
+    window.location.href = 'index.html';
+  }
+});
 
 // Load product details
-function loadProductDetail() {
-  const productId = getProductIdFromURL();
+async function loadProductDetails(id) {
+  console.log('📦 Loading details for:', id);
+  try {
+    // 1. Ensure all products are loaded (including hardcoded combos)
+    if (typeof loadProductsFromFirebase === 'function') {
+      console.log('Calling loadProductsFromFirebase...');
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout loading products')), 10000)
+      );
 
-  if (!productId) {
-    window.location.href = 'index.html';
-    return;
-  }
+      try {
+        await Promise.race([loadProductsFromFirebase(), timeoutPromise]);
+      } catch (e) {
+        console.warn('Error or timeout loading firebase products, continuing with available data:', e);
+      }
+    }
 
-  // Hide skeleton and show content when data is ready
-  const onDataReady = (product) => {
-    currentProduct = product;
+    // 2. Try to find in loaded products (this covers combos and cached firestore data)
+    let foundProduct = null;
+    if (window.products) {
+      const allProducts = [
+        ...(window.products.freshMushrooms || []),
+        ...(window.products.extracts || []),
+        ...(window.products.microdosis || []),
+        ...(window.products.specialProducts || []),
+        ...(window.products.combos || [])
+      ];
+      foundProduct = allProducts.find(p => p.id === id);
+    }
 
-    // Remove skeleton
-    const skeleton = document.getElementById('detailSkeleton');
-    if (skeleton) skeleton.style.display = 'none';
+    // FALLBACK: Hardcoded combos if not found in window.products
+    if (!foundProduct && id.includes('combo')) {
+      console.log('⚠️ Triggering hardcoded fallback for combo:', id);
+      console.log('Combo not found in window.products, using hardcoded fallback');
+      const hardcodedCombos = [
+        {
+          id: 'combo-wellness',
+          name: '🌟 Combo Bienestar Total',
+          category: 'Combos y Promociones',
+          description: '¡OFERTA ESPECIAL! Hongo Ostra (cualquier variedad) + Extracto de Melena de León + Microdosis Melena de León.',
+          price: 35.00,
+          image: 'lions_mane_extract_1763764190974.png',
+          unit: 'combo completo',
+          includes: ['1 Hongo Ostra (250g)', '1 Extracto Melena de León (30ml)', '1 Microdosis Melena de León (30 cáps)']
+        },
+        {
+          id: 'combo-energy',
+          name: '⚡ Combo Energía y Vitalidad',
+          category: 'Combos y Promociones',
+          description: '¡PROMOCIÓN! Hongo Ostra Gris + Extracto de Cordyceps + Microdosis Cordyceps.',
+          price: 30.00,
+          image: 'cordyceps_extract_1763764205645.png',
+          unit: 'combo completo',
+          includes: ['1 Hongo Ostra Gris (250g)', '1 Extracto Cordyceps (30ml)', '1 Microdosis Cordyceps (30 cáps)']
+        },
+        {
+          id: 'combo-immunity',
+          name: '🛡️ Combo Inmunidad Premium',
+          category: 'Combos y Promociones',
+          description: '¡SUPER OFERTA! Hongo Ostra Blanco + Extracto Cola de Pavo + Microdosis Melena de León.',
+          price: 30.00,
+          image: 'turkey_tail_extract_1763764175903.png',
+          unit: 'combo completo',
+          includes: ['1 Hongo Ostra Blanco (250g)', '1 Extracto Cola de Pavo (30ml)', '1 Microdosis Melena de León (30 cáps)']
+        }
+      ];
+      foundProduct = hardcodedCombos.find(p => p.id === id);
+    }
 
-    // Show real content
-    document.querySelector('.product-detail-grid').style.display = 'grid';
-    document.querySelector('.product-tabs').style.display = 'block';
+    if (foundProduct) {
+      currentProduct = foundProduct;
+      console.log('Product loaded from local data:', currentProduct);
 
-    updateProductUI();
-  };
+      updateProductUI();
 
-  // If products are already loaded
-  if (window.products && window.products.freshMushrooms.length > 0) {
-    const product = findProduct(productId);
-    if (product) {
-      onDataReady(product);
+      // Hide skeleton and show content
+      const skeleton = document.getElementById('productSkeleton');
+      if (skeleton) skeleton.style.display = 'none';
+
+      const content = document.getElementById('productContent');
+      if (content) content.style.display = 'grid';
+
+      const breadcrumb = document.getElementById('breadcrumbContainer');
+      if (breadcrumb) breadcrumb.style.display = 'block';
       return;
     }
-  }
 
-  // If not loaded, wait for them (this handles the direct link case)
-  // The skeleton is already shown by default
-  // We just need to wait for loadProductsFromFirebase to finish (called in DOMContentLoaded)
+    // 3. Fallback: Try direct Firestore fetch (only for non-combos that might have been missed)
+    console.log('Product not found locally, trying direct Firestore fetch...');
+
+    if (window.db) {
+      const docRef = db.collection('products').doc(id);
+      const doc = await docRef.get();
+
+      if (doc.exists) {
+        currentProduct = doc.data();
+        // Ensure ID is included in the object
+        currentProduct.id = doc.id;
+
+        console.log('Product loaded from Firestore:', currentProduct);
+
+        updateProductUI();
+      } else {
+        console.error('No such product!');
+        const title = document.getElementById('productTitle');
+        if (title) title.textContent = 'Producto no encontrado';
+
+        const breadcrumb = document.getElementById('breadcrumbProduct');
+        if (breadcrumb) breadcrumb.textContent = 'No encontrado';
+
+        const content = document.getElementById('productContent');
+        if (content) content.style.display = 'grid';
+      }
+    } else {
+      console.error('Firestore db not initialized');
+      document.getElementById('productTitle').textContent = 'Error de conexión';
+    }
+  } catch (error) {
+    console.error('Error getting product:', error);
+    const content = document.getElementById('productContent');
+    if (content) content.style.display = 'grid';
+  } finally {
+    // ALWAYS hide skeleton and preloader
+    const skeleton = document.getElementById('productSkeleton');
+    if (skeleton) skeleton.style.display = 'none';
+
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      preloader.classList.add('fade-out');
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
+    }
+
+    const breadcrumb = document.getElementById('breadcrumbContainer');
+    if (breadcrumb) breadcrumb.style.display = 'block';
+  }
 }
 
+// Update UI with product data
 function updateProductUI() {
-  if (!currentProduct) return;
-
-  // Update page title
-  document.title = `${currentProduct.name} - FUNGI TERRA`;
-
   // Update breadcrumb
   document.getElementById('breadcrumbProduct').textContent = currentProduct.name;
+
+  // Update main image
+  const mainImage = document.getElementById('mainImage');
+  mainImage.src = currentProduct.image || 'placeholder.jpg';
+  mainImage.alt = currentProduct.name;
 
   // Update product info
   document.getElementById('productCategory').textContent = currentProduct.category;
@@ -62,9 +176,6 @@ function updateProductUI() {
   document.getElementById('productPrice').textContent = `$${currentProduct.price.toFixed(2)}`;
   document.getElementById('productUnit').textContent = currentProduct.unit;
   document.getElementById('productDescription').textContent = currentProduct.description;
-
-  // Load gallery
-  loadGallery();
 
   // Load benefits
   loadBenefits();
@@ -74,78 +185,182 @@ function updateProductUI() {
 
   // Load storage info
   loadStorageInfo();
+
+  // Handle Out of Stock
+  const mainImageContainer = document.querySelector('.main-image-container');
+  const addToCartBtn = document.querySelector('.btn-add-cart-large');
+  const quantityBtns = document.querySelectorAll('.quantity-btn');
+  const quantityInput = document.getElementById('quantityDisplay');
+
+  // Remove existing overlay if any
+  const existingOverlay = mainImageContainer ? mainImageContainer.querySelector('.out-of-stock-overlay') : null;
+  if (existingOverlay) existingOverlay.remove();
+
+  if (currentProduct.stock === 0) {
+    // 1. Add grayscale class
+    if (mainImageContainer) {
+      mainImageContainer.classList.add('out-of-stock');
+
+      // 2. Inject CSS Badge
+      const overlay = document.createElement('div');
+      overlay.className = 'out-of-stock-overlay';
+      overlay.innerHTML = '<img src="agotado.png" class="out-of-stock-badge-img" alt="Agotado">';
+      mainImageContainer.appendChild(overlay);
+    }
+
+    // 3. Disable button
+    if (addToCartBtn) {
+      addToCartBtn.disabled = true;
+      addToCartBtn.innerHTML = '<span>🚫</span> Agotado';
+      addToCartBtn.style.backgroundColor = 'var(--color-gray)';
+      addToCartBtn.style.cursor = 'not-allowed';
+    }
+
+    // 4. Disable quantity
+    quantityBtns.forEach(btn => {
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.style.cursor = 'not-allowed';
+    });
+
+    if (quantityInput) quantityInput.style.opacity = '0.5';
+
+  } else {
+    // Reset state
+    if (mainImageContainer) mainImageContainer.classList.remove('out-of-stock');
+
+    if (addToCartBtn) {
+      addToCartBtn.disabled = false;
+      addToCartBtn.innerHTML = '<span>🛒</span> Agregar al Carrito';
+      addToCartBtn.style.backgroundColor = '';
+      addToCartBtn.style.cursor = '';
+    }
+
+    quantityBtns.forEach(btn => {
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+    });
+
+    if (quantityInput) quantityInput.style.opacity = '';
+  }
+
+  // Hide preloader
+  const preloader = document.getElementById('preloader');
+  if (preloader) {
+    preloader.classList.add('fade-out');
+    setTimeout(() => {
+      preloader.style.display = 'none';
+    }, 500);
+  }
 }
 
 // Load gallery images
 function loadGallery() {
-  const mainImage = document.getElementById('mainImage');
   const thumbnailGrid = document.getElementById('thumbnailGrid');
 
-  // For now, use the same image multiple times (you can add more images later)
-  const images = [
-    currentProduct.image,
-    currentProduct.image,
-    currentProduct.image,
-    currentProduct.image
-  ];
+  // Start with main image
+  let images = [currentProduct.image || 'https://via.placeholder.com/600x600?text=No+Image'];
 
-  mainImage.src = images[0];
-  mainImage.alt = currentProduct.name;
+  // Ensure 4 slots as requested by user
+  // If we don't have enough images, use placeholders with text
+  while (images.length < 4) {
+    const index = images.length + 1;
+    images.push(`https://via.placeholder.com/400x400/f0f0f0/888888?text=Foto+${index}`);
+  }
 
+  // Create thumbnails
   thumbnailGrid.innerHTML = images.map((img, index) => `
-    <img 
-      src="${img}" 
-      alt="${currentProduct.name} ${index + 1}" 
-      class="thumbnail ${index === 0 ? 'active' : ''}"
-      onclick="changeMainImage('${img}', ${index})"
-      onerror="this.src='https://via.placeholder.com/400x400/2d5016/ffffff?text=${encodeURIComponent(currentProduct.name)}'"
-    >
+    <img src="${img}" class="thumbnail ${index === 0 ? 'active' : ''}" 
+         onclick="changeMainImage('${img}', this)" alt="Vista ${index + 1}">
   `).join('');
 }
 
 // Change main image
-function changeMainImage(imageSrc, index) {
-  document.getElementById('mainImage').src = imageSrc;
+function changeMainImage(src, thumbnail) {
+  document.getElementById('mainImage').src = src;
 
-  // Update active thumbnail
-  document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
-    thumb.classList.toggle('active', i === index);
-  });
+  // Update active state
+  document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+  thumbnail.classList.add('active');
 }
 
-// Load benefits based on product type
+// Quantity handling
+let quantity = 1;
+
+function changeQuantity(delta) {
+  if (currentProduct.stock === 0) return;
+
+  const newQuantity = quantity + delta;
+  if (newQuantity >= 1) {
+    quantity = newQuantity;
+    document.getElementById('quantityDisplay').textContent = quantity;
+  }
+}
+
+// Add to Cart
+function addToCartFromDetail() {
+  if (!currentProduct || currentProduct.stock === 0) return;
+
+  addToCart(currentProduct, quantity);
+
+  const btn = document.querySelector('.btn-add-cart-large');
+  const originalContent = btn.innerHTML;
+
+  // 1. Change Text & Style
+  btn.textContent = '¡Agregado!';
+  btn.classList.add('btn-success');
+
+  // 2. Button Animation (Animate.css)
+  btn.classList.add('animate__animated', 'animate__rubberBand');
+
+  // 3. Confetti Explosion (Canvas Confetti)
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.6 },
+    colors: ['#2D5A2D', '#D4A574', '#FFFFFF'], // Brand colors: Green, Gold, White
+    disableForReducedMotion: true
+  });
+
+  setTimeout(() => {
+    // Reset state
+    btn.innerHTML = originalContent;
+    btn.classList.remove('btn-success', 'animate__animated', 'animate__rubberBand');
+  }, 2000);
+}
+
+
+
+// Tab switching
+function switchTab(tabId) {
+  // Update buttons
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('onclick').includes(tabId)) {
+      btn.classList.add('active');
+    }
+  });
+
+  // Update content
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.getElementById(tabId + 'Tab').classList.add('active');
+}
+
+// Load benefits based on category
 function loadBenefits() {
   const benefitsGrid = document.getElementById('benefitsGrid');
-
   let benefits = [];
 
-  // Check if it's a combo product
-  if (currentProduct.id.includes('combo')) {
-    benefits = [
-      {
-        icon: '💪',
-        title: 'Bienestar Integral',
-        description: 'Combinación perfecta de productos para tu salud completa'
-      },
-      {
-        icon: '💰',
-        title: 'Ahorro Garantizado',
-        description: 'Precio especial al comprar en combo'
-      },
-      {
-        icon: '🎯',
-        title: 'Resultados Potenciados',
-        description: 'Productos que se complementan entre sí'
-      },
-      {
-        icon: '📦',
-        title: 'Todo en Uno',
-        description: 'Recibe todo lo que necesitas en un solo paquete'
-      }
-    ];
-  }
+  console.log('Loading benefits for category:', currentProduct.category);
+  console.log('Product ID:', currentProduct.id);
+  console.log('FULL PRODUCT DATA:', JSON.stringify(currentProduct, null, 2));
+
   // Fresh mushrooms
-  else if (currentProduct.category === 'Hongos Frescos') {
+  if (currentProduct.category === 'hongos' || currentProduct.category === 'Hongos Frescos' || currentProduct.id.includes('oyster') || currentProduct.id.includes('seta') || currentProduct.id.includes('hongo')) {
+    console.log('Matched category: Hongos');
     benefits = [
       {
         icon: '🌱',
@@ -170,7 +385,8 @@ function loadBenefits() {
     ];
   }
   // Extracts
-  else if (currentProduct.category === 'Extractos Medicinales') {
+  else if (currentProduct.category === 'extractos' || currentProduct.category === 'Extractos Medicinales' || currentProduct.id.includes('extract')) {
+    console.log('Matched category: Extractos');
     if (currentProduct.id.includes('lions-mane')) {
       benefits = [
         {
@@ -243,7 +459,8 @@ function loadBenefits() {
     }
   }
   // Microdoses and Special Products
-  else if (currentProduct.category === 'Productos Especiales') {
+  else if (currentProduct.category === 'especiales' || currentProduct.category === 'microdosis' || currentProduct.category === 'Productos Especiales' || currentProduct.id.includes('micro') || currentProduct.id.includes('capsula')) {
+    console.log('Matched category: Especiales/Microdosis');
     // Special handling for Leche de Sandy
     if (currentProduct.id === 'sandy-milk') {
       benefits = [
@@ -294,6 +511,62 @@ function loadBenefits() {
         }
       ];
     }
+  } else if (
+    (currentProduct.id && currentProduct.id.toLowerCase().includes('combo')) ||
+    (currentProduct.category && currentProduct.category.toLowerCase().includes('combo')) ||
+    (currentProduct.category && currentProduct.category.toLowerCase().includes('promocion'))
+  ) {
+    console.log('Matched category: Combos');
+    benefits = [
+      {
+        icon: '✨',
+        title: 'Sinergia Total',
+        description: 'Combinación potente de hongos para maximizar resultados'
+      },
+      {
+        icon: '💰',
+        title: 'Mejor Valor',
+        description: 'Ahorra comprando el kit completo en lugar de individualmente'
+      },
+      {
+        icon: '🔄',
+        title: 'Rutina Completa',
+        description: 'Todo lo que necesitas para tu bienestar diario en un solo pack'
+      },
+      {
+        icon: '🎯',
+        title: 'Efecto Potenciado',
+        description: 'Los componentes trabajan juntos para mayor eficacia'
+      }
+    ];
+  } else {
+    console.warn('No category matched for benefits loading');
+
+    // DEBUG OVERLAY
+    const debugOverlay = document.createElement('div');
+    debugOverlay.style.position = 'fixed';
+    debugOverlay.style.bottom = '10px';
+    debugOverlay.style.right = '10px';
+    debugOverlay.style.background = 'rgba(0,0,0,0.8)';
+    debugOverlay.style.color = '#fff';
+    debugOverlay.style.padding = '20px';
+    debugOverlay.style.borderRadius = '8px';
+    debugOverlay.style.zIndex = '9999';
+    debugOverlay.style.maxWidth = '400px';
+    debugOverlay.style.fontSize = '12px';
+    debugOverlay.innerHTML = `
+      <h3>⚠️ Debug Info</h3>
+      <p><strong>ID:</strong> ${currentProduct.id}</p>
+      <p><strong>Category:</strong> ${currentProduct.category}</p>
+      <pre>${JSON.stringify(currentProduct, null, 2)}</pre>
+    `;
+    document.body.appendChild(debugOverlay);
+  }
+
+  if (benefits.length === 0) {
+    console.warn('Benefits array is empty');
+    benefitsGrid.innerHTML = '<p>No hay información de beneficios disponible para este producto.</p>';
+    return;
   }
 
   benefitsGrid.innerHTML = benefits.map(benefit => `
@@ -314,7 +587,7 @@ function loadUsageInfo() {
   let usageText = '';
 
   // Fresh mushrooms
-  if (currentProduct.category === 'Hongos Frescos') {
+  if (currentProduct.category === 'hongos' || currentProduct.category === 'Hongos Frescos' || currentProduct.id.includes('oyster') || currentProduct.id.includes('seta') || currentProduct.id.includes('hongo')) {
     usageText = `
       <p><strong>🍳 Preparación:</strong></p>
       <ul>
@@ -336,19 +609,6 @@ function loadUsageInfo() {
         <li>No sobrecargues la sartén - cocina en tandas para mejor dorado</li>
         <li>Sazona al final para evitar que suelten agua</li>
         <li>Combina con ajo, tomillo o romero para realzar el sabor</li>
-        <li>Perfectos como sustituto de carne en recetas vegetarianas</li>
-      </ul>
-    `;
-  }
-  // Extracts
-  else if (currentProduct.category === 'Extractos Medicinales') {
-    usageText = `
-      <p><strong>💧 Dosificación Recomendada:</strong></p>
-      <ul>
-        <li>📏 <strong>Dosis Estándar:</strong> 1-2 ml (aproximadamente 1 gotero completo)</li>
-        <li>⏰ <strong>Frecuencia:</strong> 1-2 veces al día</li>
-        <li>🕐 <strong>Mejor Momento:</strong> Por la mañana y/o antes de dormir</li>
-        <li>🍽️ <strong>Con o Sin Comida:</strong> Preferiblemente con el estómago vacío para mejor absorción</li>
       </ul>
       
       <p><strong>🥤 Formas de Consumo:</strong></p>
@@ -376,7 +636,7 @@ function loadUsageInfo() {
     `;
   }
   // Microdoses and Special Products
-  else if (currentProduct.category === 'Productos Especiales') {
+  else if (currentProduct.category === 'especiales' || currentProduct.category === 'microdosis' || currentProduct.category === 'Productos Especiales' || currentProduct.id.includes('micro') || currentProduct.id.includes('capsula')) {
     // Special handling for Leche de Sandy
     if (currentProduct.id === 'sandy-milk') {
       usageText = `
@@ -458,48 +718,80 @@ function loadUsageInfo() {
     }
   }
   // Combos
-  else if (currentProduct.id.includes('combo')) {
+  else if (
+    (currentProduct.id && currentProduct.id.toLowerCase().includes('combo')) ||
+    (currentProduct.category && currentProduct.category.toLowerCase().includes('combo')) ||
+    (currentProduct.category && currentProduct.category.toLowerCase().includes('promocion'))
+  ) {
     usageText = `
-      <p><strong>📦 Tu Combo Incluye:</strong></p>
-      <p>Este combo contiene múltiples productos. Aquí está cómo usar cada uno:</p>
-      
-      <p><strong>🍄 Hongos Frescos:</strong></p>
-      <ul>
-        <li>Cocinar y consumir dentro de 5-7 días</li>
-        <li>Usar en comidas principales 2-3 veces por semana</li>
-      </ul>
-      
-      <p><strong>💧 Extractos Líquidos:</strong></p>
-      <ul>
-        <li>1-2 ml (1 gotero) 1-2 veces al día</li>
-        <li>Tomar por la mañana para energía o por la noche para relajación</li>
-      </ul>
-      
-      <p><strong>💊 Microdosis (Cápsulas):</strong></p>
-      <ul>
-        <li>1-2 cápsulas al día con el desayuno</li>
-        <li>Seguir protocolo 5-2 (5 días sí, 2 días descanso)</li>
-      </ul>
-      
-      <p><strong>🎯 Rutina Sugerida:</strong></p>
-      <ul>
-        <li>🌅 <strong>Mañana:</strong> Microdosis con desayuno</li>
-        <li>🌞 <strong>Mediodía:</strong> Extracto en agua o té</li>
-        <li>🍽️ <strong>Comida:</strong> Hongos frescos en tu platillo favorito</li>
-        <li>🌙 <strong>Noche:</strong> Extracto relajante antes de dormir (opcional)</li>
-      </ul>
-      
-      <p><strong>💡 Maximiza tus Resultados:</strong></p>
-      <ul>
-        <li>Ser consistente - la regularidad es clave</li>
-        <li>Combinar con dieta balanceada y ejercicio</li>
-        <li>Mantenerse hidratado</li>
-        <li>Dormir 7-8 horas por noche</li>
-      </ul>
+      <div class="combo-guide">
+        <div class="guide-section">
+          <h4>📦 Tu Kit Incluye</h4>
+          <p>Una selección completa para tu bienestar. Aquí te explicamos cómo sacar el máximo provecho de cada producto:</p>
+        </div>
+
+        <div class="product-type-guide">
+          <div class="guide-icon">🍄</div>
+          <div class="guide-content">
+            <h5>Hongos Frescos</h5>
+            <ul>
+              <li><strong>Cocina:</strong> Saltea, asar o agrega a sopas.</li>
+              <li><strong>Frecuencia:</strong> Disfruta 2-3 veces por semana en tus comidas principales.</li>
+              <li><strong>Tip:</strong> Cocina siempre antes de consumir para liberar sus nutrientes.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="product-type-guide">
+          <div class="guide-icon">💧</div>
+          <div class="guide-content">
+            <h5>Extractos Líquidos</h5>
+            <ul>
+              <li><strong>Dosis:</strong> 1 gotero completo (1ml) al día.</li>
+              <li><strong>Uso:</strong> Directo bajo la lengua o en tu bebida favorita.</li>
+              <li><strong>Momento:</strong> Mañana para energía, noche para relax.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="product-type-guide">
+          <div class="guide-icon">💊</div>
+          <div class="guide-content">
+            <h5>Microdosis (Cápsulas)</h5>
+            <ul>
+              <li><strong>Dosis:</strong> 1-2 cápsulas diarias.</li>
+              <li><strong>Protocolo:</strong> 5 días de toma, 2 de descanso.</li>
+              <li><strong>Mejor con:</strong> Tu desayuno para empezar el día con enfoque.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="routine-box">
+          <h4>🎯 Rutina Sugerida</h4>
+          <div class="routine-steps">
+            <div class="step">
+              <span class="time">🌅 Mañana</span>
+              <span class="action">Microdosis con el desayuno</span>
+            </div>
+            <div class="step">
+              <span class="time">🌞 Mediodía</span>
+              <span class="action">Extracto en tu agua o té</span>
+            </div>
+            <div class="step">
+              <span class="time">🍽️ Comida</span>
+              <span class="action">Platillo con Hongos Frescos</span>
+            </div>
+          </div>
+        </div>
+      </div>
     `;
   }
 
-  usageContent.innerHTML = usageText;
+  if (!usageText) {
+    usageContent.innerHTML = '<p>No hay información de uso disponible.</p>';
+  } else {
+    usageContent.innerHTML = usageText;
+  }
 }
 
 // Load storage information
@@ -509,7 +801,7 @@ function loadStorageInfo() {
   let storageText = '';
 
   // Fresh mushrooms
-  if (currentProduct.category === 'Hongos Frescos') {
+  if (currentProduct.category === 'hongos' || currentProduct.category === 'Hongos Frescos' || currentProduct.id.includes('oyster') || currentProduct.id.includes('seta') || currentProduct.id.includes('hongo')) {
     storageText = `
       <p><strong>❄️ Almacenamiento Correcto:</strong></p>
       <ul>
@@ -548,7 +840,7 @@ function loadStorageInfo() {
     `;
   }
   // Extracts
-  else if (currentProduct.category === 'Extractos Medicinales') {
+  else if (currentProduct.category === 'extractos' || currentProduct.category === 'Extractos Medicinales' || currentProduct.id.includes('extract')) {
     storageText = `
       <p><strong>🏠 Almacenamiento Ideal:</strong></p>
       <ul>
@@ -587,7 +879,7 @@ function loadStorageInfo() {
     `;
   }
   // Microdoses and Special Products
-  else if (currentProduct.category === 'Productos Especiales') {
+  else if (currentProduct.category === 'especiales' || currentProduct.category === 'microdosis' || currentProduct.category === 'Productos Especiales' || currentProduct.id.includes('micro') || currentProduct.id.includes('capsula')) {
     // Special handling for Leche de Sandy
     if (currentProduct.id === 'sandy-milk') {
       storageText = `
@@ -675,147 +967,66 @@ function loadStorageInfo() {
     }
   }
   // Combos
-  else if (currentProduct.id.includes('combo')) {
+  else if (
+    (currentProduct.id && currentProduct.id.toLowerCase().includes('combo')) ||
+    (currentProduct.category && currentProduct.category.toLowerCase().includes('combo')) ||
+    (currentProduct.category && currentProduct.category.toLowerCase().includes('promocion'))
+  ) {
     storageText = `
-      <p><strong>📦 Almacenamiento de tu Combo:</strong></p>
-      <p>Tu combo incluye diferentes tipos de productos. Aquí está cómo almacenar cada uno:</p>
-      
-      <p><strong>🍄 Hongos Frescos:</strong></p>
-      <ul>
-        <li>❄️ Refrigerar inmediatamente a 2-4°C</li>
-        <li>📦 Guardar en bolsa de papel o recipiente ventilado</li>
-        <li>⏰ Consumir en 5-7 días</li>
-        <li>💡 Si no los usarás pronto, cocina y congela</li>
-      </ul>
-      
-      <p><strong>💧 Extractos Líquidos:</strong></p>
-      <ul>
-        <li>🌡️ Temperatura ambiente (15-25°C)</li>
-        <li>🌙 Lugar fresco y seco, sin luz directa</li>
-        <li>🔒 Cerrar bien después de cada uso</li>
-        <li>📅 Usar dentro de 6 meses después de abrir</li>
-      </ul>
-      
-      <p><strong>💊 Microdosis (Cápsulas):</strong></p>
-      <ul>
-        <li>🏠 Lugar fresco y seco</li>
-        <li>🚫 No refrigerar</li>
-        <li>🔒 Mantener frasco bien cerrado</li>
-        <li>📅 Usar dentro de 12 meses después de abrir</li>
-      </ul>
-      
-      <p><strong>📋 Checklist de Almacenamiento:</strong></p>
-      <ul>
-        <li>✓ Hongos frescos → Refrigerador</li>
-        <li>✓ Extractos → Alacena/gabinete</li>
-        <li>✓ Microdosis → Alacena/gabinete</li>
-        <li>✓ Todos alejados de calor y humedad</li>
-      </ul>
-      
-      <p><strong>💡 Tip Pro:</strong> Organiza tu combo en un área designada de tu cocina para facilitar tu rutina diaria. ¡La consistencia es clave para mejores resultados!</p>
+      <div class="combo-guide">
+      <div class="guide-section">
+        <h4>🏠 Guía de Almacenamiento</h4>
+        <p>Para mantener la máxima frescura y potencia de tu kit, sigue estas recomendaciones por producto:</p>
+      </div>
+
+      <div class="product-type-guide">
+        <div class="guide-icon">❄️</div>
+        <div class="guide-content">
+          <h5>Hongos Frescos</h5>
+          <ul>
+            <li><strong>Lugar:</strong> Refrigerador (2-4°C).</li>
+            <li><strong>Envase:</strong> Bolsa de papel o recipiente ventilado.</li>
+            <li><strong>Vida Útil:</strong> 5-7 días. ¡Cocínalos pronto!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="product-type-guide">
+        <div class="guide-icon">🌡️</div>
+        <div class="guide-content">
+          <h5>Extractos y Microdosis</h5>
+          <ul>
+            <li><strong>Lugar:</strong> Alacena fresca y seca.</li>
+            <li><strong>Luz:</strong> Evita la luz solar directa.</li>
+            <li><strong>Vida Útil:</strong> Meses (ver etiqueta). No requieren refrigeración.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="routine-box">
+        <h4>📋 Checklist Rápido</h4>
+        <div class="routine-steps">
+          <div class="step">
+            <span class="time">🍄 Frescos</span>
+            <span class="action">Al refri inmediato</span>
+          </div>
+          <div class="step">
+            <span class="time">💧 Extractos</span>
+            <span class="action">Alacena cerrada</span>
+          </div>
+          <div class="step">
+            <span class="time">💊 Microdosis</span>
+            <span class="action">Lugar seco</span>
+          </div>
+        </div>
+      </div>
+    </div>
     `;
   }
 
-  storageContent.innerHTML = storageText;
-}
-
-// Switch tabs
-function switchTab(tabName) {
-  // Update tab buttons
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  event.target.classList.add('active');
-
-  // Update tab content
-  document.querySelectorAll('.tab-content').forEach(content => {
-    content.classList.remove('active');
-  });
-  document.getElementById(`${tabName}Tab`).classList.add('active');
-}
-
-// Change quantity
-function changeQuantity(change) {
-  currentQuantity = Math.max(1, currentQuantity + change);
-  document.getElementById('quantityDisplay').textContent = currentQuantity;
-}
-
-// Add to cart from detail page
-function addToCartFromDetail() {
-  if (!currentProduct) return;
-
-  for (let i = 0; i < currentQuantity; i++) {
-    addToCart(currentProduct.id);
+  if (!storageText) {
+    storageContent.innerHTML = '<p>No hay información de almacenamiento disponible.</p>';
+  } else {
+    storageContent.innerHTML = storageText;
   }
-
-  // Update cart count display
-  updateCartCount();
-
-  showNotification(`${currentQuantity} x ${currentProduct.name} agregado al carrito`);
-  currentQuantity = 1;
-  document.getElementById('quantityDisplay').textContent = '1';
 }
-
-// Buy via WhatsApp from detail page
-function buyWhatsAppFromDetail() {
-  if (!currentProduct) return;
-
-  const message = `Hola, quiero comprar:\n\n*${currentProduct.name}*\nCantidad: ${currentQuantity}\nPrecio: $${(currentProduct.price * currentQuantity).toFixed(2)}\n\n¿Está disponible?`;
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  window.open(url, '_blank');
-}
-
-// Initialize on page load
-// Render Detail Skeleton
-function renderDetailSkeleton() {
-  const container = document.querySelector('.product-detail-container');
-  const existingGrid = document.querySelector('.product-detail-grid');
-  const existingTabs = document.querySelector('.product-tabs');
-
-  if (!container || !existingGrid) return;
-
-  // Hide real content initially
-  existingGrid.style.display = 'none';
-  existingTabs.style.display = 'none';
-
-  // Create skeleton
-  const skeleton = document.createElement('div');
-  skeleton.id = 'detailSkeleton';
-  skeleton.className = 'product-detail-skeleton';
-  skeleton.innerHTML = `
-    <div class="skeleton skeleton-detail-image"></div>
-    <div class="skeleton-detail-info">
-      <div class="skeleton skeleton-category"></div>
-      <div class="skeleton skeleton-title-large"></div>
-      <div class="skeleton skeleton-price-large"></div>
-      <div class="skeleton skeleton-text"></div>
-      <div class="skeleton skeleton-text"></div>
-      <div class="skeleton skeleton-text"></div>
-      <div class="skeleton-actions">
-        <div class="skeleton skeleton-btn"></div>
-        <div class="skeleton skeleton-btn"></div>
-      </div>
-    </div>
-  `;
-
-  // Insert before the grid
-  container.insertBefore(skeleton, existingGrid);
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    // Show skeleton immediately
-    renderDetailSkeleton();
-
-    // Ensure products are loaded before showing details
-    if (typeof loadProductsFromFirebase === 'function') {
-      await loadProductsFromFirebase();
-    }
-
-    // Now load the detail (which will hide skeleton)
-    loadProductDetail();
-  } catch (error) {
-    console.error("Error initializing product detail:", error);
-  }
-});

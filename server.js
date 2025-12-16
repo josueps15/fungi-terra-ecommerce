@@ -111,7 +111,7 @@ app.post('/api/register', async (req, res) => {
             
             <div style="text-align: center; margin: 30px 0;">
               <a href="https://wa.me/593960945828" style="background-color: #25D366; color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: bold; margin: 5px; display: inline-block;">WhatsApp</a>
-              <a href="https://instagram.com/setas_hongoscomestibles" style="background-color: #E1306C; color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: bold; margin: 5px; display: inline-block;">Instagram</a>
+              <a href="https://instagram.com/biorganix_ec" style="background-color: #E1306C; color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: bold; margin: 5px; display: inline-block;">Instagram</a>
             </div>
 
             <p style="text-align: center; font-size: 12px; color: #888; margin-top: 30px;">

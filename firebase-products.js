@@ -7,6 +7,9 @@ let products = {
     combos: []
 };
 
+// Expose immediately
+window.products = products;
+
 let productsLoaded = false;
 let loadingPromise = null;
 

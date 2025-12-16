@@ -11,6 +11,27 @@ const WHATSAPP_NUMBER = '593960945828'; // Ecuador: +593 960945828
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
+  // Page Transition: Fade In
+  document.body.classList.add('loaded');
+
+  // Page Transition: Fade Out on Link Click
+  document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+
+      // Only intercept internal links that are not anchors on the same page
+      if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:') && link.target !== '_blank') {
+        e.preventDefault();
+        document.body.classList.remove('loaded');
+        document.body.classList.add('fading-out');
+
+        setTimeout(() => {
+          window.location.href = href;
+        }, 400); // Match CSS transition duration
+      }
+    });
+  });
+
   // Show skeletons immediately
   showAllSkeletons();
 
@@ -71,25 +92,36 @@ function renderProducts(gridId, productList) {
   const grid = document.getElementById(gridId);
   if (!grid) return;
 
-  grid.innerHTML = productList.map(product => `
-    <div class="product-card fade-in" onclick="goToProductDetail('${product.id}')" style="cursor: pointer;">
-      <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/400x300/2d5016/ffffff?text=${encodeURIComponent(product.name)}'">
+  grid.innerHTML = productList.map(product => {
+    const isOutOfStock = product.stock === 0;
+    const stockClass = isOutOfStock ? 'out-of-stock' : '';
+    const buttonDisabled = isOutOfStock ? 'disabled' : '';
+    const buttonText = isOutOfStock ? 'Agotado' : 'Agregar al Carrito';
+    const whatsappText = isOutOfStock ? 'Agotado' : 'WhatsApp';
+    const badgeHTML = isOutOfStock ? '<div class="out-of-stock-overlay"><img src="agotado.png" class="out-of-stock-badge-img" alt="Agotado"></div>' : '';
+
+    return `
+    <div class="product-card fade-in ${stockClass}" onclick="goToProductDetail('${product.id}')" style="cursor: pointer;">
+      <div class="product-image-container" style="position: relative;">
+        ${badgeHTML}
+        <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/400x300/2d5016/ffffff?text=${encodeURIComponent(product.name)}'">
+      </div>
       <div class="product-info">
         <div class="product-category">${product.category}</div>
         <h3 class="product-name">${product.name}</h3>
         <p class="product-description">${product.description}</p>
         <div class="product-price">$${product.price.toFixed(2)} <span style="font-size: var(--font-size-sm); font-weight: 400; color: var(--color-gray);">${product.unit}</span></div>
         <div class="product-actions" onclick="event.stopPropagation()">
-          <button class="btn btn-primary" onclick="addToCart('${product.id}')">
-            Agregar al Carrito
+          <button class="btn btn-primary" onclick="addToCart('${product.id}')" ${buttonDisabled}>
+            ${buttonText}
           </button>
-          <button class="btn btn-whatsapp" onclick="buyWhatsApp('${product.id}')">
-            WhatsApp
+          <button class="btn btn-whatsapp" onclick="buyWhatsApp('${product.id}')" ${buttonDisabled}>
+            ${whatsappText}
           </button>
         </div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 // Navigate to product detail page
@@ -113,10 +145,19 @@ function renderCombos(gridId, comboList) {
   const grid = document.getElementById(gridId);
   if (!grid) return;
 
-  grid.innerHTML = comboList.map(combo => `
-    <div class="product-card combo-card fade-in" onclick="goToProductDetail('${combo.id}')" style="cursor: pointer;">
+  grid.innerHTML = comboList.map(combo => {
+    const isOutOfStock = combo.stock === 0;
+    const stockClass = isOutOfStock ? 'out-of-stock' : '';
+    const buttonDisabled = isOutOfStock ? 'disabled' : '';
+    const buttonText = isOutOfStock ? 'Agotado' : 'Agregar al Carrito';
+    const whatsappText = isOutOfStock ? 'Agotado' : 'WhatsApp';
+
+    return `
+    <div class="product-card combo-card fade-in ${stockClass}" onclick="goToProductDetail('${combo.id}')" style="cursor: pointer;">
       <div class="combo-badge">COMBO ESPECIAL</div>
-      <img src="${combo.image}" alt="${combo.name}" class="product-image" onerror="this.src='https://via.placeholder.com/400x300/2d5016/ffffff?text=${encodeURIComponent(combo.name)}'">
+      <div class="product-image-container">
+        <img src="${combo.image}" alt="${combo.name}" class="product-image" onerror="this.src='https://via.placeholder.com/400x300/2d5016/ffffff?text=${encodeURIComponent(combo.name)}'">
+      </div>
       <div class="product-info">
         <div class="product-category">${combo.category}</div>
         <h3 class="product-name">${combo.name}</h3>
@@ -129,16 +170,16 @@ function renderCombos(gridId, comboList) {
         </div>
         <div class="product-price">$${combo.price.toFixed(2)} <span style="font-size: var(--font-size-sm); font-weight: 400; color: var(--color-gray);">${combo.unit}</span></div>
         <div class="product-actions" onclick="event.stopPropagation()">
-          <button class="btn btn-primary" onclick="addToCart('${combo.id}')">
-            Agregar al Carrito
+          <button class="btn btn-primary" onclick="addToCart('${combo.id}')" ${buttonDisabled}>
+            ${buttonText}
           </button>
-          <button class="btn btn-whatsapp" onclick="buyWhatsApp('${combo.id}')">
-            WhatsApp
+          <button class="btn btn-whatsapp" onclick="buyWhatsApp('${combo.id}')" ${buttonDisabled}>
+            ${whatsappText}
           </button>
         </div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 // Find Product by ID
@@ -154,18 +195,27 @@ function findProduct(productId) {
 }
 
 // Add to Cart
-function addToCart(productId) {
-  const product = findProduct(productId);
-  if (!product) return;
+function addToCart(productOrId, qty = 1) {
+  let product;
+  if (typeof productOrId === 'string') {
+    product = findProduct(productOrId);
+  } else {
+    product = productOrId;
+  }
 
-  const existingItem = cart.find(item => item.id === productId);
+  if (!product) {
+    console.error('Product not found for cart:', productOrId);
+    return;
+  }
+
+  const existingItem = cart.find(item => item.id === product.id);
 
   if (existingItem) {
-    existingItem.quantity += 1;
+    existingItem.quantity += qty;
   } else {
     cart.push({
       ...product,
-      quantity: 1
+      quantity: qty
     });
   }
 
@@ -305,7 +355,7 @@ function checkoutWhatsApp() {
 
 
 function checkoutInstagram() {
-  window.open('https://instagram.com/setas_hongoscomestibles', '_blank');
+  window.open('https://instagram.com/biorganix_ec', '_blank');
 }
 
 // Notification System

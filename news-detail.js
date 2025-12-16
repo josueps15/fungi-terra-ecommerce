@@ -242,7 +242,7 @@ function setupShareButtons() {
             }).catch(err => {
                 console.error('Error al copiar:', err);
                 // Fallback: open Instagram profile
-                window.open('https://instagram.com/setas_hongoscomestibles', '_blank');
+                window.open('https://instagram.com/biorganix_ec', '_blank');
             });
         };
     }
