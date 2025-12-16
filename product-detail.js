@@ -539,28 +539,36 @@ function loadBenefits() {
         description: 'Los componentes trabajan juntos para mayor eficacia'
       }
     ];
-  } else {
-    console.warn('No category matched for benefits loading');
 
-    // DEBUG OVERLAY
-    const debugOverlay = document.createElement('div');
-    debugOverlay.style.position = 'fixed';
-    debugOverlay.style.bottom = '10px';
-    debugOverlay.style.right = '10px';
-    debugOverlay.style.background = 'rgba(0,0,0,0.8)';
-    debugOverlay.style.color = '#fff';
-    debugOverlay.style.padding = '20px';
-    debugOverlay.style.borderRadius = '8px';
-    debugOverlay.style.zIndex = '9999';
-    debugOverlay.style.maxWidth = '400px';
-    debugOverlay.style.fontSize = '12px';
-    debugOverlay.innerHTML = `
-      <h3>⚠️ Debug Info</h3>
-      <p><strong>ID:</strong> ${currentProduct.id}</p>
-      <p><strong>Category:</strong> ${currentProduct.category}</p>
-      <pre>${JSON.stringify(currentProduct, null, 2)}</pre>
-    `;
-    document.body.appendChild(debugOverlay);
+  } else {
+    // GENERIC FALLBACK FOR "Productos" OR UNKNOWN CATEGORIES
+    console.log('Using generic benefits for category:', currentProduct.category);
+    benefits = [
+      {
+        icon: '🌱',
+        title: '100% Natural',
+        description: 'Producto elaborado con ingredientes naturales de alta calidad'
+      },
+      {
+        icon: '⭐',
+        title: 'Calidad Premium',
+        description: 'Seleccionado y procesado bajo estrictos estándares'
+      },
+      {
+        icon: '🤝',
+        title: 'Soporte Local',
+        description: 'Apoyas a productores locales con tu compra'
+      },
+      {
+        icon: '✅',
+        title: 'Garantizado',
+        description: 'Satisfacción garantizada en todos nuestros productos'
+      }
+    ];
+
+    // Remove Debug Overlay if it exists (cleanup)
+    const existingDebug = document.querySelector('div[style*="z-index: 9999"]');
+    if (existingDebug) existingDebug.remove();
   }
 
   if (benefits.length === 0) {
