@@ -7,7 +7,7 @@
 let cart = [];
 
 // WhatsApp Configuration
-const WHATSAPP_NUMBER = '593960945828'; // Ecuador: +593 960945828
+const WHATSAPP_NUMBER = '593995807684'; // Ecuador: +593 995807684
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
