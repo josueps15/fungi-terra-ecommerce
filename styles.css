@@ -1497,6 +1497,8 @@ button {
     :root {
         --spacing-4xl: 4rem;
         --spacing-5xl: 5rem;
+        --container-padding: 1.5rem;
+        /* Increased specific padding for mobile */
     }
 
     .hero-content {
@@ -1512,6 +1514,11 @@ button {
     .product-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: var(--spacing-xl);
+    }
+
+    .container {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
     }
 }
 
@@ -1571,6 +1578,7 @@ button {
         --spacing-3xl: 2.5rem;
         --spacing-4xl: 3rem;
         --spacing-5xl: 4rem;
+        --container-padding: 1.25rem;
     }
 
     .hero {
