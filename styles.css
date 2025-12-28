@@ -1463,6 +1463,35 @@ button {
 }
 
 /* ============================================
+   CONTACT GRID
+   ============================================ */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-2xl);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.contact-card {
+    background: var(--color-white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+/* ============================================
    RESPONSIVE DESIGN - MOBILE FIRST
    ============================================ */
 
@@ -1566,7 +1595,82 @@ button {
     }
 
     .news-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columns for news on mobile */
+        gap: var(--spacing-sm);
+    }
+
+    .news-card {
+        padding: var(--spacing-md);
+        /* Reduced padding */
+    }
+
+    .news-title {
+        font-size: var(--font-size-base);
+        /* Smaller title */
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .news-description {
+        font-size: var(--font-size-xs);
+        /* Smaller text */
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        /* Limit text lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .news-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+        /* Smaller icon */
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* Force 3 columns horizontal */
+        gap: var(--spacing-xs);
+    }
+
+    .contact-card {
+        padding: var(--spacing-sm);
+        border-radius: var(--radius-lg);
+    }
+
+    .contact-card h3 {
+        font-size: var(--font-size-xs);
+        margin-bottom: 2px;
+    }
+
+    .contact-card p {
+        display: none;
+        /* Hide description text on mobile to save space */
+    }
+
+    .contact-icon-large {
+        font-size: 1.5rem !important;
+        /* Smaller icons */
+        margin-bottom: var(--spacing-xs) !important;
+    }
+
+    .contact-icon-large svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .btn-contact-fix {
+        font-size: 0.7rem;
+        /* Tiny button text */
+        padding: 4px 8px;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .cart-modal {
