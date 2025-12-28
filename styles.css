@@ -981,7 +981,7 @@ button {
 }
 
 .combo-includes li::before {
-    content: 'âœ“';
+    content: '\2714';
     position: absolute;
     left: 0;
     color: var(--color-primary);
@@ -1523,6 +1523,10 @@ button {
 }
 
 @media (max-width: 768px) {
+    .scroll-hint-wrapper {
+        display: block;
+    }
+
     .mobile-menu-toggle {
         display: flex;
     }
@@ -1556,7 +1560,9 @@ button {
     }
 
     .product-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+        /* Tighten gap for mobile 2-col */
     }
 
     .news-grid {
@@ -1570,6 +1576,40 @@ button {
     .footer-content {
         grid-template-columns: 1fr;
         gap: var(--spacing-2xl);
+    }
+
+    /* Mobile Carousel for All Product Sections */
+    #combosGrid,
+    #freshMushroomsGrid,
+    #extractsGrid,
+    #microdosisGrid,
+    #specialProductsGrid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: var(--spacing-lg);
+        gap: var(--spacing-md);
+        /* Hide scrollbar */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    #combosGrid::-webkit-scrollbar,
+    #freshMushroomsGrid::-webkit-scrollbar,
+    #extractsGrid::-webkit-scrollbar,
+    #microdosisGrid::-webkit-scrollbar,
+    #specialProductsGrid::-webkit-scrollbar {
+        display: none;
+    }
+
+    #combosGrid .product-card,
+    #freshMushroomsGrid .product-card,
+    #extractsGrid .product-card,
+    #microdosisGrid .product-card,
+    #specialProductsGrid .product-card {
+        min-width: 85%;
+        scroll-snap-align: center;
+        margin: 0;
     }
 }
 
@@ -1595,6 +1635,11 @@ button {
 
     .btn {
         width: 100%;
+    }
+
+    .container {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
     }
 }
 
@@ -2317,24 +2362,33 @@ button {
 .thumbnail-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
 }
 
 .thumbnail {
     aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
     border: 2px solid transparent;
+    /* Reserve space for border */
     transition: all var(--transition-base);
-    background-color: var(--color-white);
+    opacity: 0.7;
+}
+
+.thumbnail img {
     width: 100%;
-    box-shadow: var(--shadow-sm);
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
 }
 
 .thumbnail:hover {
+    opacity: 1;
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
 }
 
 .thumbnail.active {
@@ -2866,4 +2920,396 @@ body.fading-out {
     /* Force clickable */
     display: inline-block;
     /* Ensure hit area */
+}
+
+/* ============================================
+   MOBILE SCROLL HINT
+   ============================================ */
+
+.scroll-hint-wrapper {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 20;
+    display: none;
+    /* Hidden by default, shown via JS on mobile */
+    transition: opacity 0.5s ease-out;
+}
+
+.scroll-hint-arrow {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: var(--color-primary);
+    font-size: 1.2rem;
+    animation: hintPulse 2s infinite;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+@keyframes hintPulse {
+    0% {
+        transform: translateX(0);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: translateX(10px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 0.8;
+    }
+}
+
+.scroll-hint-wrapper.hint-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .scroll-hint-wrapper {
+        display: block;
+    }
+}
+
+/* ============================================
+   FLOATING ASSISTANT BUTTONS
+   ============================================ */
+
+.floating-widget-container {
+    position: fixed;
+    bottom: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.floating-widget-left {
+    left: 24px;
+    align-items: flex-start;
+}
+
+.floating-widget-right {
+    right: 24px;
+    align-items: flex-end;
+}
+
+/* Base Button Style */
+.float-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    border: none;
+    z-index: 2;
+}
+
+.float-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.float-btn svg,
+.float-btn img {
+    width: 32px;
+    height: 32px;
+    fill: white;
+}
+
+/* WhatsApp Specific */
+.btn-whatsapp-float {
+    background-color: #25D366;
+}
+
+.btn-whatsapp-float::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #25D366;
+    opacity: 0.5;
+    z-index: -1;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+
+    75%,
+    100% {
+        transform: scale(1.6);
+        opacity: 0;
+    }
+}
+
+/* FungiBot Specific */
+.btn-bot-float {
+    background: var(--gradient-primary);
+}
+
+.bot-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--color-accent-gold);
+    color: var(--color-primary-dark);
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 2px solid white;
+}
+
+/* Chat Bubbles / Popups */
+.chat-popup {
+    position: absolute;
+    bottom: 70px;
+    /* Closer to button */
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    /* Softer shadow */
+    width: 280px;
+    /* Slightly narrower */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.chat-popup.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.floating-widget-left .chat-popup {
+    left: 0;
+    transform-origin: bottom left;
+}
+
+.floating-widget-right .chat-popup {
+    right: 0;
+    transform-origin: bottom right;
+}
+
+/* WhatsApp Message Bubble (Join.chat style) */
+.wa-bubble {
+    padding: 12px 16px;
+    /* Optimized padding */
+    font-size: 0.9rem;
+    color: var(--color-gray-dark);
+    line-height: 1.4;
+    cursor: pointer;
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    /* Smoother radius */
+}
+
+.wa-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 24px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    transform: rotate(45deg);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.03);
+    /* Subtle shadow only */
+}
+
+.wa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.8rem;
+    color: #25D366;
+    font-weight: bold;
+}
+
+/* FungiBot Chat Interface */
+.bot-window {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    width: 340px;
+    max-width: calc(100vw - 48px);
+}
+
+.bot-header {
+    background: var(--gradient-primary);
+    padding: 12px 16px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bot-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bot-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background: var(--color-cream);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.message {
+    padding: 8px 12px;
+    border-radius: 12px;
+    max-width: 85%;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    animation: fadeIn 0.3s ease;
+}
+
+.message.bot {
+    background: white;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    color: var(--color-gray-dark);
+}
+
+.message.user {
+    background: var(--color-primary-light);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bot-input-area {
+    display: none;
+    /* Hidden for button mode */
+}
+
+.bot-options {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.option-btn {
+    background: white;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.option-btn:hover {
+    background: var(--color-primary-light);
+    color: white;
+    border-color: var(--color-primary-light);
+}
+
+.bot-input {
+    flex: 1;
+    border: 1px solid var(--color-gray-light);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.bot-input:focus {
+    border-color: var(--color-primary);
+}
+
+.bot-send-btn {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.bot-send-btn:hover {
+    transform: scale(1.1);
+}
+
+.close-chat {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.close-chat:hover {
+    color: white;
+}
+
+/* Mobile Adjustments for Chat Widgets */
+@media (max-width: 480px) {
+    .floating-widget-left {
+        left: 16px;
+        bottom: 16px;
+    }
+
+    .floating-widget-right {
+        right: 16px;
+        bottom: 16px;
+    }
+
+    .chat-popup {
+        width: 280px;
+        bottom: 80px;
+        /* Adjusted for tighter mobile layout */
+    }
+
+    .bot-window {
+        width: 300px;
+        height: 350px;
+    }
 }

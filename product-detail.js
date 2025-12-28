@@ -170,6 +170,26 @@ function updateProductUI() {
   mainImage.src = currentProduct.image || 'placeholder.jpg';
   mainImage.alt = currentProduct.name;
 
+  // Render Thumbnails (Force 4 images for UX)
+  const thumbnailGrid = document.getElementById('thumbnailGrid');
+  if (thumbnailGrid) {
+    // Use real images if available, otherwise duplicate main image 3 times + main to make 4
+    const images = currentProduct.images && currentProduct.images.length > 0
+      ? currentProduct.images
+      : [currentProduct.image, currentProduct.image, currentProduct.image, currentProduct.image];
+
+    // Ensure at least 4 items for the grid layout
+    while (images.length < 4) {
+      images.push(currentProduct.image);
+    }
+
+    thumbnailGrid.innerHTML = images.slice(0, 4).map((img, index) => `
+      <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeMainImage('${img}', this)">
+        <img src="${img}" alt="Vista ${index + 1}">
+      </div>
+    `).join('');
+  }
+
   // Update product info
   document.getElementById('productCategory').textContent = currentProduct.category;
   document.getElementById('productTitle').textContent = currentProduct.name;
@@ -1037,4 +1057,20 @@ function loadStorageInfo() {
   } else {
     storageContent.innerHTML = storageText;
   }
+}
+
+// Change main image from thumbnail
+function changeMainImage(src, thumbnailElement) {
+  const mainImage = document.getElementById('mainImage');
+  if (mainImage) {
+    mainImage.style.opacity = '0.5';
+    setTimeout(() => {
+      mainImage.src = src;
+      mainImage.style.opacity = '1';
+    }, 200);
+  }
+
+  // Update active class
+  document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+  if (thumbnailElement) thumbnailElement.classList.add('active');
 }
