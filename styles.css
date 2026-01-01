@@ -2067,36 +2067,25 @@ button {
         scroll-snap-align: center;
     }
 
+
+
     #combosGrid::-webkit-scrollbar,
     #freshMushroomsGrid::-webkit-scrollbar,
     #extractsGrid::-webkit-scrollbar,
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding-bottom: var(--spacing-lg);
-    gap: var(--spacing-md);
-    /* Hide scrollbar */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
+    #microdosisGrid::-webkit-scrollbar,
+    #specialProductsGrid::-webkit-scrollbar {
+        display: none;
+    }
 
-#combosGrid::-webkit-scrollbar,
-#freshMushroomsGrid::-webkit-scrollbar,
-#extractsGrid::-webkit-scrollbar,
-#microdosisGrid::-webkit-scrollbar,
-#specialProductsGrid::-webkit-scrollbar {
-    display: none;
-}
-
-#combosGrid .product-card,
-#freshMushroomsGrid .product-card,
-#extractsGrid .product-card,
-#microdosisGrid .product-card,
-#specialProductsGrid .product-card {
-    min-width: 85%;
-    scroll-snap-align: center;
-    margin: 0;
-}
+    #combosGrid .product-card,
+    #freshMushroomsGrid .product-card,
+    #extractsGrid .product-card,
+    #microdosisGrid .product-card,
+    #specialProductsGrid .product-card {
+        min-width: 85%;
+        scroll-snap-align: center;
+        margin: 0;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2522,33 +2511,6 @@ button {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 
-    .nav-menu.active {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .hero {
-        min-height: auto;
-        padding: var(--spacing-3xl) 0;
-    }
-
-    .product-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .news-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .cart-modal {
-        max-width: 100%;
-    }
-
-    .footer-content {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-2xl);
-    }
 }
 
 @media (max-width: 480px) {
