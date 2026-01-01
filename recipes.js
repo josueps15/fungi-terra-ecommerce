@@ -355,18 +355,20 @@ function openRecipeModal(id) {
         <h2>${recipe.title}</h2>
       </div>
       
-      <div class="recipe-detail-section">
-        <h3>🍅 Ingredientes</h3>
-        <ul class="recipe-list">
-          ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
-        </ul>
-      </div>
+      <div class="recipe-content-wrapper">
+        <div class="recipe-detail-section">
+          <h3>🍅 Ingredientes</h3>
+          <ul class="recipe-list">
+            ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+          </ul>
+        </div>
 
-      <div class="recipe-detail-section">
-        <h3>👨‍🍳 Preparación</h3>
-        <ol class="recipe-list-ordered">
-          ${recipe.preparation.map(step => `<li>${step}</li>`).join('')}
-        </ol>
+        <div class="recipe-detail-section">
+          <h3>👨‍🍳 Preparación</h3>
+          <ol class="recipe-list-ordered">
+            ${recipe.preparation.map(step => `<li>${step}</li>`).join('')}
+          </ol>
+        </div>
       </div>
     `;
         modal.classList.add('active');

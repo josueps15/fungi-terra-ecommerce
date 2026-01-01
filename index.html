@@ -489,6 +489,17 @@
     </div>
   </div>
 
+  <!-- Recipe Details Modal -->
+  <div class="recipe-modal" id="recipeModal">
+    <div class="recipe-modal-backdrop" onclick="closeRecipeModal()"></div>
+    <div class="recipe-modal-container">
+      <button class="recipe-modal-close" onclick="closeRecipeModal()">&times;</button>
+      <div id="recipeModalContent" class="recipe-modal-body">
+        <!-- Content injected via JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- JavaScript -->
   <!-- Firebase SDK -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.6.1/firebase-app-compat.min.js"></script>

@@ -11,6 +11,9 @@ const WHATSAPP_NUMBER = '593995807684'; // Ecuador: +593 995807684
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
+  // Initialize Event Listeners immediately
+  initializeEventListeners();
+
   // Page Transition: Fade In
   document.body.classList.add('loaded');
 
@@ -42,9 +45,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadProducts();
   loadCart();
   loadCart();
-  initializeEventListeners();
+  loadCart();
+  // initializeEventListeners(); // Moved to top
+  // initializeEventListeners(); // Moved to top
   addScrollHints();
-  injectFloatingWidgets();
+  // injectFloatingWidgets();
+  renderRecipes(); // Render Recipes
   initializeScrollEffects();
 });
 
@@ -600,6 +606,7 @@ function addScrollHints() {
   const grids = [
     'freshMushroomsGrid',
     'extractsGrid',
+    'microdosisGrid',
     'microdosisGrid',
     'specialProductsGrid',
     'combosGrid'
@@ -1172,6 +1179,4 @@ function getBotResponse(input) {
 // Expose functions globally for HTML onclick events
 window.toggleWhatsApp = toggleWhatsApp;
 window.toggleBot = toggleBot;
-window.handleBotKey = handleBotKey;
-window.sendBotMessage = sendBotMessage;
 window.injectFloatingWidgets = injectFloatingWidgets;
