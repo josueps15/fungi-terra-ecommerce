@@ -1,4 +1,4 @@
-﻿/* ============================================
+/* ============================================
    BIORGANIX PREMIUM DESIGN SYSTEM
    Organic, Natural, Premium
    ============================================ */
@@ -311,9 +311,14 @@ button {
 
 /* Optional: Add an icon before the logo text if not present in HTML */
 .logo::before {
-    content: '🍄';
-    font-size: 1.8rem;
-    -webkit-text-fill-color: initial;
+    content: '';
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    background-image: url('isotipobio.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
@@ -329,7 +334,7 @@ button {
 
 .nav-link {
     font-weight: var(--font-medium);
-    color: var(--color-gray-dark);
+    color: #2b2823;
     transition: all var(--transition-base);
     position: relative;
     padding: var(--spacing-xs) 0;
@@ -583,7 +588,12 @@ button {
 
 .hero-image img {
     filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
-    animation: float 6s ease-in-out infinite;
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transform-origin: center;
+}
+
+.hero-image img:hover {
+    transform: scale(1.05);
 }
 
 @keyframes fadeInUp {
